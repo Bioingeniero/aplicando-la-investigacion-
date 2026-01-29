@@ -103,18 +103,29 @@ def main():
         with open(file_path, 'r', encoding='utf-8') as f:
             raw_html = f.read()
 
-        # 1. PARCHE CSS: Sobrescribimos el estilo interno que limita la altura
+        # --- PARCHE CSS V2 (ADAPTATIVO) ---
+        # 1. 'height: auto' permite que el contenido defina la altura.
+        # 2. 'flex-grow: 0' evita que la diapositiva se estire para llenar espacios vacíos.
+        # 3. Mantenemos el fondo oscuro en el body para evitar cortes visuales.
+        
         css_patch = """
         <style>
             body, html {
                 height: auto !important;
-                min-height: 100vh !important;
+                min-height: 100% !important;
                 overflow: visible !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important; /* Centra la diapo horizontalmente */
+                background-color: #121212 !important; /* Parche estético de fondo */
             }
+            
+            /* Esta es la clave: le decimos al contenedor de la diapo que NO se estire */
             .slide-container {
-                height: auto !important;
-                min-height: 100vh;
-                margin: 0 auto;
+                height: auto !important;       /* Usar solo lo necesario */
+                min-height: unset !important;  /* Eliminar mínimos forzados */
+                flex-grow: 0 !important;       /* Prohibido estirarse artificialmente */
+                margin-bottom: 50px !important; /* Un respiro al final */
             }
         </style>
         """
@@ -122,9 +133,8 @@ def main():
         # Unimos el parche con el HTML original
         html_fixed = css_patch + raw_html
             
-        # 2. RENDERIZADO: Usamos una altura FIJA generosa (1100px) 
-        # para asegurar que quepa cualquier formato (4:3 o 16:9)
-        components.html(html_fixed, height=1100, scrolling=True)
+        # Mantenemos una altura de ventana amplia para que quepa todo sin scroll interno del iframe
+        components.html(html_fixed, height=1000, scrolling=True)
 
     except Exception as e:
         st.error(f"Error cargando archivo: {e}")
