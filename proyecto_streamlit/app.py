@@ -106,7 +106,7 @@ def main():
         # Renderizamos el HTML con un ancho FIJO que coincida con el diseño de las diapositivas (1280px).
         # Esto evita que Streamlit intente "apretar" la diapositiva si la ventana es pequeña.
         # width=1300 da un pequeño margen de seguridad.
-        components.html(raw_html, height=iframe_height, width=1300, scrolling=True)
+        components.html(raw_html, height=iframe_height, scrolling=True)
 
     except Exception as e:
         st.error(f"Error cargando archivo: {e}")
