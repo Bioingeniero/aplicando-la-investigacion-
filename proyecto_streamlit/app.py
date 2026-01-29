@@ -82,7 +82,7 @@ def main():
         st.markdown("---")
         st.header("Ajustes de Visualización")
         
-        iframe_height = st.slider("Altura del visor (px)", 600, 2000, 1000, 100)
+        iframe_height = st.slider("Altura del visor (px)", 600, 2000, 1200, 100)
         
         st.info("Si la diapositiva se ve cortada, reduce la escala.")
         scale_factor = st.slider("Escala (%)", 50, 150, 85, 5) / 100
