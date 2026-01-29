@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 5: Etapa Crítica 2 - Conformado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores Temáticos */
+            --pressure-color: #e67e22; /* Naranja para fuerza/presión */
+            --density-low: #95a5a6; /* Gris claro para baja densidad/poroso */
+            --density-high: #34495e; /* Azul oscuro para alta densidad */
+            --good-result: #2ecc71;
+            --bad-result: #e74c3c;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(to bottom, #23282e, var(--bg-dark));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* Main Comparison Container */
+        .comparison-main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 30px;
+        }
+
+        /* Sections (Opción A y B) */
+        .comparison-section {
+            flex: 1;
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        /* Diagram Container (For Block + Arrows) */
+        .diagram-stage {
+            position: relative;
+            width: 250px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* The Material Block */
+        .material-block {
+            width: 140px;
+            height: 180px;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.2);
+            /* Patrón de partículas base */
+            background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 10px 10px;
+        }
+
+        /* Visualización de Densidad Irregular (Uniaxial) */
+        .density-irregular {
+            /* Gradiente que muestra mayor densidad arriba/abajo y menor en el centro/esquinas */
+            background: linear-gradient(to bottom, 
+                var(--density-high) 0%, 
+                var(--density-low) 40%, 
+                var(--density-low) 60%, 
+                var(--density-high) 100%);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        /* Añadir "poros" visibles en las zonas de baja densidad */
+        .density-irregular::after {
+            content: '';
+            position: absolute;
+            top: 30%; left: 10%; right: 10%; bottom: 30%;
+            background-image: radial-gradient(var(--density-low) 2px, transparent 2px);
+            background-size: 15px 15px;
+            opacity: 0.6;
+        }
+
+
+        /* Visualización de Densidad Uniforme (Isostático) */
+        .density-uniform {
+            /* Un color sólido y oscuro que indica alta compactación */
+            background: linear-gradient(135deg, var(--density-high), #2c3e50);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.7);
+        }
+        /* Partículas distribuidas uniformemente */
+        .density-uniform::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 5px 5px; /* Patrón más fino y denso */
+        }
+
+
+        /* Force Arrows Styling */
+        .arrow {
+            position: absolute;
+            background-color: var(--pressure-color);
+            box-shadow: 0 0 10px var(--pressure-color);
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+        }
+
+        /* Vertical Arrows (Uniaxial) */
+        .arrow-v {
+            width: 40px;
+            height: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .arrow-top {
+            top: 0;
+            animation: pressDown 2s infinite alternate ease-in-out;
+        }
+        .arrow-top::after {
+            border-width: 20px 20px 0 20px;
+            border-color: var(--pressure-color) transparent transparent transparent;
+            top: 100%; left: 0;
+        }
+        .arrow-bottom {
+            bottom: 0;
+            animation: pressUp 2s infinite alternate ease-in-out;
+        }
+        .arrow-bottom::after {
+            border-width: 0 20px 20px 20px;
+            border-color: transparent transparent var(--pressure-color) transparent;
+            bottom: 100%; left: 0;
+        }
+
+        /* Surrounding Arrows (Isostatic) */
+        /* Reutilizamos las verticales y añadimos horizontales */
+        .arrow-h {
+            width: 40px;
+            height: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .arrow-left {
+            left: 0;
+            animation: pressRight 2s infinite alternate ease-in-out;
+        }
+        .arrow-left::after {
+            border-width: 20px 0 20px 20px;
+            border-color: transparent transparent transparent var(--pressure-color);
+            left: 100%; top: 0;
+        }
+        .arrow-right {
+            right: 0;
+            animation: pressLeft 2s infinite alternate ease-in-out;
+        }
+        .arrow-right::after {
+            border-width: 20px 20px 20px 0;
+            border-color: transparent var(--pressure-color) transparent transparent;
+            right: 100%; top: 0;
+        }
+
+        /* Animations for pressure */
+        @keyframes pressDown { from { transform: translateX(-50%) translateY(0); } to { transform: translateX(-50%) translateY(10px); } }
+        @keyframes pressUp { from { transform: translateX(-50%) translateY(0); } to { transform: translateX(-50%) translateY(-10px); } }
+        @keyframes pressRight { from { transform: translateY(-50%) translateX(0); } to { transform: translateY(-50%) translateX(10px); } }
+        @keyframes pressLeft { from { transform: translateY(-50%) translateX(0); } to { transform: translateY(-50%) translateX(-10px); } }
+
+
+        /* Result Text */
+        .result-label {
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .result-bad { color: var(--bad-result); background: rgba(231, 76, 60, 0.1); border: 1px solid var(--bad-result); }
+        .result-good { color: var(--good-result); background: rgba(46, 204, 113, 0.1); border: 1px solid var(--good-result); }
+
+        /* Footer Support Text */
+        .footer-support {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .support-item {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .support-icon {
+            margin-right: 10px;
+            color: var(--pressure-color);
+        }
+        .objective-highlight {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Etapa Crítica 2: Conformado (Prensado)</h1>
+        </header>
+
+        <main class="comparison-main">
+            <section class="comparison-section" style="border-color: rgba(231, 76, 60, 0.3);">
+                <h2 class="section-title">Opción A: Prensado Uniaxial</h2>
+                
+                <div class="diagram-stage">
+                    <div class="arrow arrow-v arrow-top"></div>
+                    
+                    <div class="material-block density-irregular"></div>
+                    
+                    <div class="arrow arrow-v arrow-bottom"></div>
+                </div>
+
+                <div class="result-label result-bad">
+                    Resultado: Densidad Irregular
+                </div>
+            </section>
+
+            <section class="comparison-section" style="border-color: rgba(46, 204, 113, 0.3);">
+                <h2 class="section-title">Opción B: Prensado Isostático</h2>
+                
+                <div class="diagram-stage">
+                     <div class="arrow arrow-v arrow-top" style="top: -20px;"></div> <div class="arrow arrow-h arrow-left"></div>
+                    
+                    <div class="material-block density-uniform"></div>
+                    
+                    <div class="arrow arrow-h arrow-right"></div>
+                    <div class="arrow arrow-v arrow-bottom" style="bottom: -20px;"></div>
+                </div>
+
+                <div class="result-label result-good">
+                    Resultado: Densidad Uniforme
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer-support">
+            <div class="support-item">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                Control de la Densidad Verde.
+            </div>
+            <div class="support-item">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+                La distribución de porosidad se define aquí.
+            </div>
+            <div class="support-item">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span class="objective-highlight">Objetivo:</span> Maximizar homogeneidad para reducir vías de humedad.
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

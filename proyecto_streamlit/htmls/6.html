@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 6: Carbonización</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores Temáticos */
+            --heat-color: #ff9800; /* Naranja intenso para temperatura */
+            --risk-color: #e74c3c; /* Rojo para zona de riesgo */
+            --grid-color: #37474f; /* Color sutil para la cuadrícula */
+            --axis-color: #78909c;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo sutil con gradiente térmico */
+            background-image: radial-gradient(circle at bottom center, rgba(255, 152, 0, 0.1) 0%, var(--bg-dark) 60%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        
+        .header-icon {
+            color: var(--heat-color);
+            filter: drop-shadow(0 0 10px rgba(255, 152, 0, 0.5));
+        }
+
+        /* Main Content: The Graph */
+        .graph-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .chart-svg {
+            width: 90%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* SVG Styles */
+        .axis-line { stroke: var(--axis-color); stroke-width: 2; }
+        .grid-line { stroke: var(--grid-color); stroke-width: 1; stroke-dasharray: 5,5; }
+        .axis-label { fill: var(--text-muted); font-size: 14px; font-family: 'Roboto', sans-serif; }
+        .axis-title { fill: var(--axis-color); font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; text-transform: uppercase;}
+
+        .temp-curve {
+            fill: none;
+            stroke: var(--heat-color);
+            stroke-width: 4;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 8px var(--heat-color));
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawCurve 3s ease-out forwards 0.5s;
+        }
+
+        .risk-zone-rect {
+            fill: var(--risk-color);
+            opacity: 0;
+            animation: fadeInRisk 2s ease-in-out forwards 1.5s;
+        }
+        .risk-zone-label {
+             fill: var(--risk-color);
+             font-family: 'Montserrat', sans-serif;
+             font-weight: 700;
+             font-size: 18px;
+             opacity: 0;
+             animation: fadeInRisk 2s ease-in-out forwards 1.5s;
+        }
+
+        @keyframes drawCurve {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes fadeInRisk {
+            to { opacity: 0.2; }
+        }
+
+
+        /* Footer Support Text */
+        .footer-support {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .support-box {
+            background: rgba(255,255,255,0.05);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border-left: 4px solid #555;
+            max-width: 45%;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .support-icon-box {
+            margin-top: 3px;
+        }
+        
+        .support-text {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            line-height: 1.4;
+        }
+        .highlight-risk { color: var(--risk-color); font-weight: 600; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Etapa Crítica 3: Carbonización</h1>
+            <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3v-2.26C4.19 13.47 3 11.38 3 9a7 7 0 0 1 9-7z"></path><line x1="9" y1="21" x2="15" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line><path d="M12 13a2 2 0 0 0 2-2c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2z"></path></svg>
+        </header>
+
+        <main class="graph-container">
+            <svg class="chart-svg" viewBox="0 0 900 500" preserveAspectRatio="xMidYMid meet">
+                <rect class="risk-zone-rect" x="100" y="130" width="750" height="160" />
+                <text class="risk-zone-label" x="475" y="210" text-anchor="middle" style="opacity: 0.8; animation: none; fill: var(--risk-color);">ZONA CRÍTICA DE DESCOMPOSICIÓN</text>
+
+                <line class="grid-line" x1="100" y1="450" x2="850" y2="450" /> <line class="grid-line" x1="100" y1="370" x2="850" y2="370" /> <line class="grid-line" x1="100" y1="290" x2="850" y2="290" /> <line class="grid-line" x1="100" y1="210" x2="850" y2="210" /> <line class="grid-line" x1="100" y1="130" x2="850" y2="130" /> <line class="grid-line" x1="100" y1="50" x2="850" y2="50" />   <line class="axis-line" x1="100" y1="50" x2="100" y2="450" /> <line class="axis-line" x1="100" y1="450" x2="850" y2="450" /> <text class="axis-label" x="90" y="455" text-anchor="end">200°C</text>
+                <text class="axis-label" x="90" y="295" text-anchor="end" font-weight="bold" fill="#fff">600°C</text>
+                <text class="axis-label" x="90" y="135" text-anchor="end" font-weight="bold" fill="#fff">1000°C</text>
+                <text class="axis-label" x="90" y="55" text-anchor="end">1200°C</text>
+                <text class="axis-title" x="40" y="250" transform="rotate(-90 40,250)" text-anchor="middle">Temperatura (°C)</text>
+
+                <text class="axis-label" x="100" y="470" text-anchor="middle">0h</text>
+                <text class="axis-label" x="287.5" y="470" text-anchor="middle">5h</text>
+                <text class="axis-label" x="475" y="470" text-anchor="middle">10h</text>
+                <text class="axis-label" x="662.5" y="470" text-anchor="middle">15h</text>
+                <text class="axis-label" x="850" y="470" text-anchor="middle">20h</text>
+                 <text class="axis-title" x="475" y="495" text-anchor="middle">Tiempo de Ciclo (Horas)</text>
+
+                <path class="temp-curve" d="M 100,450 C 200,430 250,400 300,290 S 450,130 600,130 L 850,130" />
+                
+                <circle cx="300" cy="290" r="6" fill="var(--heat-color)" /> <circle cx="600" cy="130" r="6" fill="var(--heat-color)" /> </svg>
+        </main>
+
+        <footer class="footer-support">
+            <div class="support-box" style="border-color: var(--heat-color);">
+                <div class="support-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--heat-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                </div>
+                <p class="support-text">
+                    Descomposición del Binder. <br>Generación de <strong>Porosidad Abierta</strong> por salida de volátiles.
+                </p>
+            </div>
+
+            <div class="support-box" style="border-color: var(--risk-color);">
+                <div class="support-icon-box">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--risk-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <p class="support-text">
+                    <span class="highlight-risk">Punto Crítico:</span> La velocidad de calentamiento (rampa) en esta zona determina si el poro queda abierto o cerrado.
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

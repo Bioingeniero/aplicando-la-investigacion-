@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 8: Síntesis del Diagnóstico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores del Diagrama */
+            --cause-1-chem: #ffc107; /* Ámbar para Química */
+            --cause-2-phys: #00d2ff; /* Cian para Físico/Prensado */
+            --cause-3-therm: #ff5722; /* Naranja intenso para Térmico */
+            --effect-alarm: #ff3b30; /* Rojo para el Efecto */
+            
+            --connector-flow: #546e7a; /* Color base de los conectores */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo sutil con patrón de red interconectada */
+            background-image: 
+                radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, transparent 70%),
+                linear-gradient(to bottom, #23282e, var(--bg-dark));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        /* Main Content: The Integrative Diagram */
+        .diagram-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            position: relative;
+            /* Padding lateral para espacio visual */
+            padding: 0 50px;
+        }
+
+        /* Columna Izquierda: Las Causas */
+        .causes-column {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            flex: 0 0 350px; /* Ancho fijo para las cajas de causa */
+            z-index: 2;
+        }
+
+        .cause-box {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 20px 25px;
+            border-left: 6px solid #555;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cause-box:hover {
+            transform: translateX(10px);
+        }
+
+        .cause-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .cause-icon svg { width: 32px; height: 32px; }
+
+        .cause-text h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+        }
+        .cause-text p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-style: italic;
+        }
+
+        /* Estilos específicos por Causa */
+        .c1-chem { border-color: var(--cause-1-chem); }
+        .c1-chem h3 { color: var(--cause-1-chem); }
+        .c1-chem .cause-icon { color: var(--cause-1-chem); }
+
+        .c2-phys { border-color: var(--cause-2-phys); }
+        .c2-phys h3 { color: var(--cause-2-phys); }
+        .c2-phys .cause-icon { color: var(--cause-2-phys); }
+
+        .c3-therm { border-color: var(--cause-3-therm); }
+        .c3-therm h3 { color: var(--cause-3-therm); }
+        .c3-therm .cause-icon { color: var(--cause-3-therm); }
+
+
+        /* Columna Derecha: El Efecto */
+        .effect-column {
+            flex: 0 0 350px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 2;
+            margin-left: auto; /* Empuja a la derecha */
+        }
+
+        .effect-box {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.1), rgba(150, 35, 35, 0.2));
+            border: 4px solid var(--effect-alarm);
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 59, 48, 0.2);
+            position: relative;
+            animation: pulseEffect 3s infinite ease-in-out;
+        }
+        
+        .effect-box h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--effect-alarm);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .effect-label {
+            color: var(--text-light);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
+        }
+        
+        @keyframes pulseEffect {
+            0%, 100% { box-shadow: 0 0 40px rgba(255, 59, 48, 0.2); }
+            50% { box-shadow: 0 0 60px rgba(255, 59, 48, 0.4); }
+        }
+
+
+        /* SVG Connectors Layer */
+        .connector-svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .connector-path {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            opacity: 0.6;
+        }
+        
+        .flow-animation {
+            stroke-dasharray: 20;
+            animation: flowDash 2s linear infinite;
+        }
+
+        @keyframes flowDash {
+            to { stroke-dashoffset: -40; }
+        }
+
+        /* Footer Support Text */
+        .footer-support {
+            margin-top: auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            text-align: center;
+        }
+
+        .support-item {
+            max-width: 400px;
+        }
+
+        .support-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .highlight-important { 
+            color: var(--text-light); font-weight: 700; 
+            border-bottom: 2px solid var(--cause-2-phys);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Síntesis del Diagnóstico</h1>
+        </header>
+
+        <main class="diagram-container">
+            
+            <svg class="connector-svg-layer" viewBox="0 0 1160 400" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--cause-1-chem);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:var(--effect-alarm);stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--cause-2-phys);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:var(--effect-alarm);stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--cause-3-therm);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:var(--effect-alarm);stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                
+                <path class="connector-path flow-animation" stroke="url(#grad1)" d="M 350,60 C 550,60 550,200 780,200" />
+                <path class="connector-path flow-animation" stroke="url(#grad2)" d="M 350,200 L 780,200" />
+                <path class="connector-path flow-animation" stroke="url(#grad3)" d="M 350,340 C 550,340 550,200 780,200" />
+                
+                <polygon points="780,185 780,215 820,200" fill="var(--effect-alarm)" />
+            </svg>
+
+
+            <div class="causes-column">
+                <div class="cause-box c1-chem">
+                    <div class="cause-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </div>
+                    <div class="cause-text">
+                        <h3>Química del Binder</h3>
+                        <p>(Hidrofilicidad / Absorción)</p>
+                    </div>
+                </div>
+
+                <div class="cause-box c2-phys">
+                    <div class="cause-icon">
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"></path><circle cx="12" cy="12" r="3"></circle><path d="M12 15a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" opacity="0.5"></path></svg>
+                    </div>
+                    <div class="cause-text">
+                        <h3>Baja Densidad de Prensado</h3>
+                        <p>(Exceso de Porosidad)</p>
+                    </div>
+                </div>
+
+                <div class="cause-box c3-therm">
+                    <div class="cause-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"></path><path d="M12 12v.01"></path><path d="m16 15-2 3"></path><path d="m6 15 2 3"></path></svg>
+                    </div>
+                    <div class="cause-text">
+                        <h3>Ciclo Térmico Inadecuado</h3>
+                        <p>(Estructura de poro abierta)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="effect-column">
+                <div class="effect-box">
+                    <span class="effect-label">Efecto Resultante</span>
+                    <h2>INTERNAL SWELLING</h2>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="footer-support">
+            <div class="support-item">
+                <p class="support-text">
+                    El problema es inherentemente <strong>multifactorial</strong>; ninguna causa aislada explica la falla completa.
+                </p>
+            </div>
+            <div class="support-item">
+                <p class="support-text">
+                    <span class="highlight-important">Solución requerida:</span> Ajuste simultáneo y coordinado de las etapas críticas identificadas.
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

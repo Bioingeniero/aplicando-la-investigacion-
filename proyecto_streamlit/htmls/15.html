@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 15: Análisis de Sensibilidad - ANOVA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-terminal: #121212;
+            --bg-panel: #1e1e24;
+            --text-light: #e0e0e0;
+            --text-code: #a9b7c6;
+            
+            /* Tech / Data Science Colors */
+            --python-blue: #306998;
+            --python-yellow: #ffd43b;
+            --jupyter-orange: #f37726;
+            --neon-blue: #00d2ff;
+            --neon-purple: #9b59b6;
+            --data-green: #2ecc71;
+            
+            --terminal-glow: rgba(0, 210, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 con fondo estilo terminal */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-terminal);
+            /* Fondo con patrón de líneas de escaneo y código sutil */
+            background-image: 
+                linear-gradient(transparent 50%, rgba(0, 0, 0, 0.5) 50%),
+                radial-gradient(circle at top left, rgba(48, 105, 152, 0.15), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(243, 119, 38, 0.1), transparent 40%);
+            background-size: 100% 4px, 100% 100%, 100% 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 210, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            border: 1px solid #333;
+        }
+        
+        /* Efecto de parpadeo de terminal */
+        .slide-container::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: rgba(18, 16, 16, 0.1);
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker { 0% { opacity: 0.15; } 50% { opacity: 0; } 100% { opacity: 0.15; } }
+
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .slide-header h1 {
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px var(--neon-blue);
+            display: flex;
+            align-items: center;
+        }
+        
+        .header-prompt {
+             font-family: 'Fira Code', monospace;
+             color: var(--data-green);
+             margin-right: 15px;
+             font-weight: 500;
+        }
+
+
+        /* Main Content Layout */
+        .content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            gap: 40px;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* Left Column: Tools (Logos & Code) */
+        .tools-section {
+            flex: 0 0 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .logos-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #444;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,210,255,0.05);
+        }
+
+        .tool-logo {
+            width: 100px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+            transition: transform 0.3s ease;
+        }
+        .tool-logo:hover { transform: scale(1.1); }
+
+        /* Fake code snippet background */
+        .code-bg {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text-code);
+            opacity: 0.6;
+            position: absolute;
+            top: 20px;
+            left: -20px;
+            z-index: -1;
+            line-height: 1.4;
+        }
+        .keyword { color: #cc7832; } /* Orange for keywords */
+        .string { color: #6a8759; } /* Green for strings */
+        .function { color: #ffc66d; } /* Yellow for functions */
+
+
+        /* Right Column: Data Visualization (Heatmap) */
+        .viz-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-panel);
+            border-radius: 15px;
+            border: 1px solid #444;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .viz-title {
+            font-family: 'Fira Code', monospace;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        /* Heatmap Grid */
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: auto repeat(5, 1fr);
+            gap: 5px;
+            flex-grow: 1;
+        }
+
+        /* Heatmap Headers & Labels */
+        .hm-label {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+        .hm-header-col { font-weight: 600; color: var(--text-light); }
+        .hm-header-row { font-weight: 600; color: var(--text-light); justify-content: flex-end; padding-right: 10px; }
+
+        /* Heatmap Cells */
+        .hm-cell {
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: crosshair;
+            position: relative;
+        }
+        .hm-cell:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px currentColor;
+            z-index: 2;
+        }
+
+        /* Heatmap Color Scale & Values */
+        .val-high { background: linear-gradient(135deg, #ff3300, #ff6600); box-shadow: 0 0 5px #ff3300; } /* Alta correlación (Rojo) */
+        .val-mid-high { background: linear-gradient(135deg, #ff9900, #ffcc00); color: #222; }
+        .val-mid { background: linear-gradient(135deg, #2ecc71, #27ae60); } /* Media (Verde) */
+        .val-mid-low { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .val-low { background: linear-gradient(135deg, #303f9f, #1a237e); opacity: 0.6; } /* Baja (Azul oscuro) */
+
+        /* Cell Value Overlay (hidden by default, shown on hover could be an option, but keeping simple) */
+        .cell-value { position: relative; z-index: 2; }
+
+
+        /* Footer Support Text */
+        .slide-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-around;
+            position: relative;
+            z-index: 3;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-panel);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .footer-icon {
+            color: var(--neon-blue);
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .footer-text {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.3;
+        }
+        .highlight-tech { color: var(--jupyter-orange); font-family: 'Fira Code', monospace; font-weight: 500; }
+        .highlight-method { color: var(--neon-purple); font-weight: 600; }
+        .highlight-obj { color: var(--data-green); font-weight: 600; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1><span class="header-prompt">$></span> METODOLOGÍA: ANÁLISIS DE SENSIBILIDAD</h1>
+        </header>
+
+        <main class="content-wrapper">
+            
+            <section class="tools-section">
+                <div class="logos-container" style="position: relative;">
+                    <div class="code-bg">
+                        <span class="keyword">import</span> pandas <span class="keyword">as</span> pd<br>
+                        <span class="keyword">import</span> seaborn <span class="keyword">as</span> sns<br>
+                        <span class="keyword">from</span> scipy <span class="keyword">import</span> stats<br>
+                        <br>
+                        <span class="comment"># Cargar datos del experimento</span><br>
+                        df = pd.<span class="function">read_csv</span>(<span class="string">'doe_results.csv'</span>)<br>
+                        <br>
+                        <span class="comment"># Análisis ANOVA para Densidad</span><br>
+                        model = <span class="function">ols</span>(<span class="string">'Density ~ C(Binder) + Pressure + Temp'</span>, data=df).<span class="function">fit</span>()<br>
+                        anova_table = sm.stats.<span class="function">anova_lm</span>(model, typ=2)<br>
+                    </div>
+
+                    <img class="tool-logo" src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo">
+                    
+                    <div style="font-size: 2rem; color: var(--text-muted); font-weight: 300;">+</div>
+
+                    <img class="tool-logo" src="https://upload.wikimedia.org/wikipedia/commons/3/38/Jupyter_logo.svg" alt="Jupyter Logo">
+                </div>
+            </section>
+
+            <section class="viz-section">
+                <div class="viz-title">>>> Matriz de Correlación de Impacto (Heatmap) <<<</div>
+                
+                <div class="heatmap-grid">
+                    <div></div> <div class="hm-label hm-header-col">Binder (A)</div>
+                    <div class="hm-label hm-header-col">Presión (B)</div>
+                    <div class="hm-label hm-header-col">Temp. (C)</div>
+                    <div class="hm-label hm-header-col">Impreg. (D)</div>
+                    <div class="hm-label hm-header-col" style="color: var(--neon-blue);">Densidad (Y)</div>
+
+                    <div class="hm-label hm-header-row">Binder (A)</div>
+                    <div class="hm-cell val-low"><span class="cell-value">1.00</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">0.15</span></div>
+                    <div class="hm-cell val-mid"><span class="cell-value">0.45</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">0.20</span></div>
+                    <div class="hm-cell val-high"><span class="cell-value">0.85</span></div> <div class="hm-label hm-header-row">Presión (B)</div>
+                    <div class="hm-cell val-low"><span class="cell-value">0.15</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">1.00</span></div>
+                    <div class="hm-cell val-mid-low"><span class="cell-value">0.30</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">0.10</span></div>
+                    <div class="hm-cell val-mid-high"><span class="cell-value">0.72</span></div> <div class="hm-label hm-header-row">Temp. (C)</div>
+                    <div class="hm-cell val-mid"><span class="cell-value">0.45</span></div>
+                    <div class="hm-cell val-mid-low"><span class="cell-value">0.30</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">1.00</span></div>
+                    <div class="hm-cell val-mid-low"><span class="cell-value">0.25</span></div>
+                    <div class="hm-cell val-mid"><span class="cell-value">0.55</span></div> <div class="hm-label hm-header-row">Impreg. (D)</div>
+                    <div class="hm-cell val-low"><span class="cell-value">0.20</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">0.10</span></div>
+                    <div class="hm-cell val-mid-low"><span class="cell-value">0.25</span></div>
+                    <div class="hm-cell val-low"><span class="cell-value">1.00</span></div>
+                    <div class="hm-cell val-mid-low"><span class="cell-value">0.35</span></div> <div class="hm-label hm-header-row" style="color: var(--neon-blue);">Densidad (Y)</div>
+                    <div class="hm-cell val-high"><span class="cell-value">0.85</span></div>
+                    <div class="hm-cell val-mid-high"><span class="cell-value">0.72</span></div>
+                    <div class="hm-cell val-mid"><span class="cell-value">0.55</span></div>
+                    <div class="hm-cell val-mid-low"><span class="cell-value">0.35</span></div>
+                    <div class="hm-cell val-low" style="border: 2px solid var(--neon-blue);"><span class="cell-value">1.00</span></div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="slide-footer">
+            <div class="footer-item">
+                <div class="footer-icon">In [1]:</div>
+                <p class="footer-text">Herramienta: <span class="highlight-tech">Jupyter Notebooks</span> (Stack Python).</p>
+            </div>
+            <div class="footer-item">
+                <div class="footer-icon">func()</div>
+                <p class="footer-text">Método Estadístico: <span class="highlight-method">ANOVA</span> (Analysis of Variance).</p>
+            </div>
+            <div class="footer-item">
+                <div class="footer-icon">=> TARGET</div>
+                <p class="footer-text">Objetivo: Determinar qué variables impactan <span class="highlight-obj">realmente</span> la Densidad Global.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

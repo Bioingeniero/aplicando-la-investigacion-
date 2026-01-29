@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 7: Tratamientos Secundarios (Impregnación)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores Temáticos */
+            --fluid-color: #00d2ff; /* Cian brillante para el líquido impregnante */
+            --fluid-dark: #008fb3;
+            --solid-matrix: #4a5568;
+            --pore-empty: #2d3748;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo sutil con ondas de fluido */
+            background-image: 
+                radial-gradient(circle at 50% 80%, rgba(0, 210, 255, 0.1) 0%, transparent 60%),
+                linear-gradient(to bottom, #23282e, var(--bg-dark));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        
+        .header-icon-fluid {
+            color: var(--fluid-color);
+            filter: drop-shadow(0 0 8px var(--fluid-color));
+        }
+
+        /* Main Visualization Area (VPI Process) */
+        .vpi-visualization {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* El Tanque de Autoclave */
+        .autoclave-tank {
+            width: 500px;
+            height: 350px;
+            background: rgba(255,255,255,0.05);
+            border: 4px solid #555;
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.8),
+                0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Indicadores de proceso (Vacío/Presión) */
+        .process-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        .indicator-vacuum { animation: fadeStep 8s infinite; }
+        .indicator-pressure { animation: fadeStep 8s infinite 4s; opacity: 0; color: var(--fluid-color); }
+
+
+        /* La Pieza Porosa */
+        .porous-block {
+            width: 200px;
+            height: 150px;
+            background-color: var(--solid-matrix);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.1);
+            /* Patrón de poros */
+            background-image: radial-gradient(circle at center, var(--pore-empty) 60%, transparent 65%);
+            background-size: 15px 15px;
+            background-position: 0 0;
+            transition: background-image 2s ease-in-out;
+            z-index: 2;
+            /* Animación de llenado de poros */
+            animation: fillPoresSequence 8s infinite;
+        }
+
+        /* El Líquido Impregnante */
+        .impregnant-liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10%; /* Nivel inicial bajo */
+            background: linear-gradient(to top, var(--fluid-dark), var(--fluid-color));
+            opacity: 0.9;
+            box-shadow: 0 0 20px var(--fluid-color);
+            z-index: 1;
+            /* Animación de subida del nivel */
+            animation: liquidRiseSequence 8s infinite;
+        }
+        
+        /* Burbujas durante la fase de vacío */
+        .bubbles-container {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200px; height: 150px;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            pointer-events: none;
+        }
+        .bubble {
+            position: absolute;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: riseBubble 2s infinite ease-in;
+            opacity: 0;
+        }
+        .b1 { width: 10px; height: 10px; left: 20%; animation-delay: 0.5s; }
+        .b2 { width: 15px; height: 15px; left: 50%; animation-delay: 1s; }
+        .b3 { width: 8px; height: 8px; left: 80%; animation-delay: 1.5s; }
+
+        /* Animaciones del Proceso VPI */
+        /* Secuencia: 0-4s Vacío (Burbujas, líquido bajo), 4-8s Presión (Líquido sube, poros se llenan) */
+        
+        @keyframes liquidRiseSequence {
+            0%, 40% { height: 15%; } /* Fase Vacío */
+            60%, 100% { height: 75%; } /* Fase Presión/Inmersión */
+        }
+
+        @keyframes fillPoresSequence {
+            0%, 45% { 
+                /* Poros vacíos */
+                background-image: radial-gradient(circle at center, var(--pore-empty) 60%, transparent 65%);
+            }
+            70%, 100% { 
+                /* Poros llenos (cambian a color del fluido) */
+                background-image: radial-gradient(circle at center, var(--fluid-color) 60%, transparent 65%);
+                box-shadow: 0 0 15px var(--fluid-color);
+            }
+        }
+        
+        @keyframes riseBubble {
+             0% { bottom: 0; opacity: 0; }
+             20% { opacity: 1; }
+             100% { bottom: 120%; opacity: 0; }
+        }
+
+        @keyframes fadeStep {
+            0%, 40% { opacity: 1; }
+            50%, 100% { opacity: 0.2; }
+        }
+
+
+        /* Etiqueta del Concepto */
+        .concept-label {
+            position: absolute;
+            bottom: -40px;
+            background: linear-gradient(90deg, rgba(0, 210, 255, 0.2), rgba(0, 143, 179, 0.2));
+            border: 2px solid var(--fluid-color);
+            padding: 10px 30px;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--fluid-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Footer Support Text */
+        .support-text-container {
+            margin-top: auto;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .support-block {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 45%;
+        }
+
+        .support-icon {
+            color: var(--fluid-color);
+            flex-shrink: 0;
+        }
+
+        .support-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .highlight { color: var(--text-light); font-weight: 600; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Etapa Crítica 4: Tratamientos Secundarios</h1>
+            <svg class="header-icon-fluid" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.74 5.74a8 8 0 1 1-11.48 0l5.74-5.74z"></path><path d="M9 13h6"></path><path d="M12 10v6"></path></svg>
+        </header>
+
+        <main class="vpi-visualization">
+            <div class="autoclave-tank">
+                <div class="process-indicator indicator-vacuum">Fase 1: Vacío</div>
+                <div class="process-indicator indicator-pressure">Fase 2: Presión e Inmersión</div>
+
+                <div class="bubbles-container" style="animation: fadeStep 8s infinite reverse;">
+                    <div class="bubble b1"></div>
+                    <div class="bubble b2"></div>
+                    <div class="bubble b3"></div>
+                </div>
+
+                <div class="porous-block"></div>
+                
+                <div class="impregnant-liquid"></div>
+            </div>
+            
+            <div class="concept-label">Concepto: "Sellado Funcional"</div>
+        </main>
+
+        <footer class="support-text-container">
+            <div class="support-block">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                <p class="support-text">
+                    Ajuste de propiedades <span class="highlight">sin alterar</span> la estructura base del material.
+                </p>
+            </div>
+
+            <div class="support-block">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <p class="support-text">
+                    <span class="highlight">Objetivo:</span> Bloquear la porosidad residual sin rigidizar excesivamente la pieza.
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

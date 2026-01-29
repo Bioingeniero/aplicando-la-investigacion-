@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 14: Variable 4 - Recubrimiento/Impregnación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores Temáticos */
+            --color-std-fill: #7f8c8d; /* Gris polvo para Carbon Black */
+            --color-prop-barrier: #00d2ff; /* Cian brillante para la barrera funcional */
+            --color-water: #3498db; /* Azul para el agua */
+            --base-material: #4a5568; /* Color base de la pieza */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo sutil con patrón de capas/superficies */
+            background-image: 
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px),
+                radial-gradient(circle at center bottom, rgba(0, 210, 255, 0.1) 0%, var(--bg-dark) 60%);
+            background-size: 100% 30px, 100% 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+        }
+        
+        .header-icon {
+            color: var(--color-prop-barrier);
+            filter: drop-shadow(0 0 5px var(--color-prop-barrier));
+        }
+
+        /* Main Content: Comparison of Surface Layers */
+        .comparison-container {
+            flex-grow: 1;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: stretch;
+            padding-bottom: 20px;
+        }
+
+        .comparison-panel {
+            flex: 1;
+            background: var(--bg-panel);
+            border-radius: 15px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            border: 3px solid transparent;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .comparison-panel:hover { transform: translateY(-5px); }
+
+        .panel-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .panel-label {
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: -15px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* SVG Illustration Area */
+        .illustration-stage {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* SVG Styles */
+        .base-material { fill: var(--base-material); }
+        .pore { fill: #2d3748; }
+        
+        /* Estándar: Carbon Black (Partículas sueltas) */
+        .std-panel { border-color: var(--color-std-fill); }
+        .std-panel .panel-title { color: var(--color-std-fill); }
+        .particulate-fill { 
+            fill: var(--color-std-fill); 
+            opacity: 0.8;
+        }
+        .water-droplet-in {
+            fill: var(--color-water);
+            animation: penetrate 3s infinite ease-in;
+        }
+        @keyframes penetrate {
+            0% { transform: translateY(-20px); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(40px); opacity: 0; }
+        }
+
+        /* Propuesta: Barrera Funcional (Capa continua) */
+        .prop-panel { border-color: var(--color-prop-barrier); }
+        .prop-panel .panel-title { color: var(--color-prop-barrier); }
+        .functional-barrier {
+            fill: var(--color-prop-barrier);
+            filter: drop-shadow(0 2px 5px var(--color-prop-barrier));
+            opacity: 0.9;
+        }
+        .water-droplet-out {
+            fill: var(--color-water);
+            animation: bounceOff 3s infinite ease-out;
+        }
+        @keyframes bounceOff {
+            0% { transform: translate(0, -30px); opacity: 0; }
+            30% { transform: translate(0, 0); opacity: 1; }
+            60% { transform: translate(30px, -20px); }
+            100% { transform: translate(50px, -40px); opacity: 0; }
+        }
+
+
+        /* Footer Support Text */
+        .slide-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            max-width: 45%;
+        }
+        
+        .footer-icon-box {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+        }
+
+        .footer-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .highlight-barrier { color: var(--color-prop-barrier); font-weight: 600; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 12 12 17 22 12"/><path d="M2 17l10 5 10-5"/><path d="M2 7l10 5 10-5"/><path d="M12 22V7"/></svg>
+            <h1>Variable 4: Recubrimiento / Impregnación</h1>
+        </header>
+
+        <main class="comparison-container">
+            
+            <div class="comparison-panel std-panel">
+                <h2 class="panel-title">Estándar Actual</h2>
+                <p class="panel-label">"Carbon Black" (Relleno simple e inerte)</p>
+                
+                <div class="illustration-stage">
+                    <svg width="100%" height="100%" viewBox="0 0 400 250">
+                        <defs>
+                            <pattern id="carbonParticles" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                                <circle cx="5" cy="5" r="3" fill="var(--color-std-fill)"/>
+                                <circle cx="15" cy="12" r="2.5" fill="var(--color-std-fill)"/>
+                                <circle cx="8" cy="18" r="2" fill="var(--color-std-fill)"/>
+                            </pattern>
+                        </defs>
+                        
+                        <rect class="base-material" x="0" y="80" width="400" height="170" />
+                        <circle class="pore" cx="50" cy="120" r="10"/>
+                        <circle class="pore" cx="150" cy="150" r="15"/>
+                        <circle class="pore" cx="280" cy="110" r="12"/>
+                        <circle class="pore" cx="350" cy="160" r="8"/>
+
+                        <rect fill="url(#carbonParticles)" x="0" y="60" width="400" height="30" opacity="0.8" />
+                        
+                        <g class="water-droplet-in" transform="translate(50, 50)"><circle r="6"/></g>
+                        <g class="water-droplet-in" transform="translate(150, 40)" style="animation-delay: 0.5s;"><circle r="6"/></g>
+                        <g class="water-droplet-in" transform="translate(280, 45)" style="animation-delay: 1s;"><circle r="6"/></g>
+                        
+                        <path d="M 50,30 L 50,90" stroke="var(--color-water)" stroke-width="3" marker-end="url(#arrowIn)" opacity="0.6"/>
+                        <path d="M 280,25 L 280,100" stroke="var(--color-water)" stroke-width="3" marker-end="url(#arrowIn)" opacity="0.6"/>
+                        
+                        <defs><marker id="arrowIn" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--color-water)"/></marker></defs>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="comparison-panel prop-panel">
+                <h2 class="panel-title">Propuesta Funcional</h2>
+                <p class="panel-label">Alternativas (Silanos / Aceites)</p>
+                
+                <div class="illustration-stage">
+                    <svg width="100%" height="100%" viewBox="0 0 400 250">
+                         <rect class="base-material" x="0" y="80" width="400" height="170" />
+                        <circle class="pore" cx="50" cy="120" r="10"/>
+                        <circle class="pore" cx="150" cy="150" r="15"/>
+                        <circle class="pore" cx="280" cy="110" r="12"/>
+                        <circle class="pore" cx="350" cy="160" r="8"/>
+
+                        <path class="functional-barrier" d="M 0,80 Q 50,80 50,75 Q 50,70 100,70 L 250,70 Q 280,70 280,75 Q 280,80 320,80 L 400,80 L 400,60 L 0,60 Z" />
+                        <rect class="functional-barrier" x="0" y="65" width="400" height="15" opacity="0.6"/> <g class="water-droplet-out" transform="translate(80, 60)"><circle r="6"/></g>
+                        <g class="water-droplet-out" transform="translate(200, 55)" style="animation-delay: 0.7s;"><circle r="6"/></g>
+                        <g class="water-droplet-out" transform="translate(320, 60)" style="animation-delay: 1.4s;"><circle r="6"/></g>
+
+                        <path d="M 80,30 L 80,65 L 110,40" fill="none" stroke="var(--color-water)" stroke-width="3" marker-end="url(#arrowOut)" opacity="0.8"/>
+                         <defs><marker id="arrowOut" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--color-water)"/></marker></defs>
+
+                    </svg>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="slide-footer">
+            <div class="footer-item">
+                <div class="footer-icon-box" style="border-color: var(--color-prop-barrier);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-prop-barrier)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <div class="footer-label" style="color: var(--color-prop-barrier);">Hipótesis de Barrera</div>
+                    <p class="footer-text">Una <span class="highlight-barrier">barrera superficial activa</span> y continua impedirá físicamente la entrada de humedad.</p>
+                </div>
+            </div>
+
+            <div class="footer-item">
+                <div class="footer-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+                </div>
+                <div>
+                    <div class="footer-label">Acción Experimental</div>
+                    <p class="footer-text">Sustituir el relleno inerte actual por <span class="highlight-barrier">agentes hidrofóbicos</span> funcionales (e.g., base silano).</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

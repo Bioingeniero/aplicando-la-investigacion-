@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 17: Selección Final - Diagrama de Pareto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1e2e; /* Azul oscuro corporativo/ejecutivo */
+            --bg-panel: #252a3a;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores del Gráfico */
+            --bar-color-start: #0056b3;
+            --bar-color-end: #007bff;
+            --line-color: #e74c3c; /* Rojo intenso para la línea acumulada */
+            --axis-color: #78909c;
+            --grid-color: rgba(120, 144, 156, 0.15);
+            --highlight-gold: #f1c40f; /* Para el cutoff del 80% */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo sutil profesional */
+            background-image: linear-gradient(to bottom right, var(--bg-dark), #0f121a);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            border-top: 4px solid var(--bar-color-end);
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+        }
+
+        /* Main Content: Pareto Chart Area */
+        .chart-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+            background: var(--bg-panel);
+            border-radius: 12px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.2);
+        }
+
+        .chart-svg {
+            width: 95%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* SVG Elements Styling */
+        .axis-line { stroke: var(--axis-color); stroke-width: 2; }
+        .grid-line { stroke: var(--grid-color); stroke-width: 1; }
+        .axis-label { fill: var(--text-muted); font-size: 14px; font-family: 'Roboto', sans-serif; font-weight: 500; }
+        .axis-title { fill: var(--text-light); font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 700; text-transform: uppercase;}
+
+        .bar {
+            fill: url(#barGradient);
+            filter: drop-shadow(4px 4px 10px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+        }
+        .bar:hover { transform: scaleY(1.02); }
+
+        .cumulative-line {
+            fill: none;
+            stroke: var(--line-color);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+        }
+        
+        .line-marker {
+            fill: var(--bg-dark);
+            stroke: var(--line-color);
+            stroke-width: 3;
+        }
+
+        .bar-value-label {
+            fill: var(--text-light); font-size: 16px; font-weight: 700; text-anchor: middle;
+        }
+        .cum-value-label {
+            fill: var(--line-color); font-size: 14px; font-weight: 700; text-anchor: start;
+        }
+
+        .cutoff-line {
+            stroke: var(--highlight-gold); stroke-width: 2; stroke-dasharray: 8 4;
+        }
+        .cutoff-label {
+            fill: var(--highlight-gold); font-weight: 700; font-size: 14px;
+        }
+
+
+        /* Footer Support Text */
+        .slide-footer {
+            margin-top: auto;
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .footer-box {
+            flex: 1;
+            background: rgba(255,255,255,0.03);
+            padding: 20px 25px;
+            border-radius: 10px;
+            border-left: 4px solid #555;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .footer-icon-container {
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-text-content h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .footer-text-content p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+        .highlight-bold { color: var(--text-light); font-weight: 700; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Selección Final: Diagrama de Pareto</h1>
+        </header>
+
+        <main class="chart-container">
+            <svg class="chart-svg" viewBox="0 0 1000 500">
+                <defs>
+                    <linearGradient id="barGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:var(--bar-color-end)" />
+                        <stop offset="100%" style="stop-color:var(--bar-color-start)" />
+                    </linearGradient>
+                </defs>
+
+                <line class="axis-line" x1="100" y1="50" x2="100" y2="400" />
+                <line class="axis-line" x1="900" y1="50" x2="900" y2="400" />
+                <line class="axis-line" x1="100" y1="400" x2="900" y2="400" /> <line class="grid-line" x1="100" y1="312.5" x2="900" y2="312.5" /> <line class="grid-line" x1="100" y1="225" x2="900" y2="225" />   <line class="grid-line" x1="100" y1="137.5" x2="900" y2="137.5" /> <line class="grid-line" x1="100" y1="50" x2="900" y2="50" />      <line class="cutoff-line" x1="100" y1="120" x2="900" y2="120" /> <text class="cutoff-label" x="910" y="125" text-anchor="start">80% Cutoff</text>
+
+                <text class="axis-title" x="40" y="225" transform="rotate(-90 40,225)" text-anchor="middle">Impacto Relativo (Puntuación)</text>
+                <text class="axis-title" x="960" y="225" transform="rotate(90 960,225)" text-anchor="middle">% Acumulado</text>
+
+                <text class="axis-label" x="90" y="405" text-anchor="end">0</text>
+                <text class="axis-label" x="90" y="225" text-anchor="end">50</text>
+                <text class="axis-label" x="90" y="55" text-anchor="end">100</text>
+                
+                <text class="axis-label" x="910" y="405" text-anchor="start">0%</text>
+                <text class="axis-label" x="910" y="225" text-anchor="start">50%</text>
+                <text class="axis-label" x="910" y="55" text-anchor="start">100%</text>
+
+                <rect class="bar" x="150" y="225" width="150" height="175" />
+                <text class="bar-value-label" x="225" y="215">50</text>
+                <text class="axis-label" x="225" y="430" text-anchor="middle" font-weight="700">Binder (A)</text>
+
+                <rect class="bar" x="350" y="312.5" width="150" height="87.5" opacity="0.8" />
+                <text class="bar-value-label" x="425" y="300">25</text>
+                <text class="axis-label" x="425" y="430" text-anchor="middle">Presión (B)</text>
+
+                <rect class="bar" x="550" y="347.5" width="150" height="52.5" opacity="0.6" />
+                <text class="bar-value-label" x="625" y="335">15</text>
+                <text class="axis-label" x="625" y="430" text-anchor="middle">Temp. (C)</text>
+
+                 <rect class="bar" x="750" y="365" width="150" height="35" opacity="0.4" />
+                <text class="bar-value-label" x="825" y="355">10</text>
+                <text class="axis-label" x="825" y="430" text-anchor="middle">Impreg. (D)</text>
+
+                <polyline class="cumulative-line" points="100,400 225,225 425,137.5 625,85 825,50" />
+                
+                <circle class="line-marker" cx="225" cy="225" r="6" />
+                <text class="cum-value-label" x="235" y="225">50%</text>
+                <circle class="line-marker" cx="425" cy="137.5" r="6" />
+                <text class="cum-value-label" x="435" y="137.5">75%</text>
+                <circle class="line-marker" cx="625" cy="85" r="6" />
+                <text class="cum-value-label" x="635" y="85">90%</text>
+                <circle class="line-marker" cx="825" cy="50" r="6" />
+            </svg>
+        </main>
+
+        <footer class="slide-footer">
+            <div class="footer-box" style="border-color: var(--highlight-gold);">
+                <div class="footer-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--highlight-gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
+                <div class="footer-text-content">
+                    <h3 style="color: var(--highlight-gold);">El Principio 80/20</h3>
+                    <p>Identificar el <span class="highlight-bold">20% de los parámetros críticos</span> (Binder + Presión) que resuelven el 80% del problema de hinchamiento.</p>
+                </div>
+            </div>
+
+            <div class="footer-box" style="border-color: var(--bar-color-end);">
+                 <div class="footer-icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--bar-color-end)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="footer-text-content">
+                    <h3 style="color: var(--bar-color-end);">Resultado Ejecutivo</h3>
+                    <p>Selección de la Formulación Óptima basada en <span class="highlight-bold">evidencia estadística robusta</span>, no en intuición.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
