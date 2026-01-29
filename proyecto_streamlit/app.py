@@ -6,7 +6,19 @@ import re
 # Configuración de la página (layout="wide" es vital para ver bien las gráficas)
 st.set_page_config(layout="wide", page_title="Presentación R&D")
 
+# --- CSS Global para Streamlit (eliminar borde del iframe) ---
+# Esto afectará a todos los iframes de Streamlit en la página.
+st.markdown("""
+<style>
+    iframe {
+        border: none !important; /* Elimina el borde del iframe */
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 # --- Funciones Auxiliares ---
+
 def natural_sort_key(s):
     return [int(text) if text.isdigit() else text.lower()
             for text in re.split('([0-9]+)', s)]
@@ -18,7 +30,7 @@ def load_html_files(directory):
     files.sort(key=natural_sort_key)
     return files
 
-# --- Callbacks para Botones (Solución al problema de que "no funcionan") ---
+# --- Callbacks para Botones ---
 def ir_siguiente():
     if st.session_state.slide_index < st.session_state.max_index:
         st.session_state.slide_index += 1
@@ -28,13 +40,13 @@ def ir_anterior():
         st.session_state.slide_index -= 1
 
 def actualizar_desde_slider():
-    # El slider devuelve el nombre del archivo, buscamos su índice
     files = st.session_state.files
     selection = st.session_state.slider_selection
     if selection in files:
         st.session_state.slide_index = files.index(selection)
 
 # --- App Principal ---
+
 def main():
     st.title("📊 Presentación Interactiva R&D")
     
@@ -45,19 +57,19 @@ def main():
         st.error("No se encontraron archivos HTML.")
         return
 
-    # Guardar lista de archivos en session_state para acceso global
     st.session_state.files = files
     st.session_state.max_index = len(files) - 1
 
-    # Inicializar índice
     if 'slide_index' not in st.session_state:
+        st.session_state.slide_index = 0
+
+    if st.session_state.slide_index >= len(files):
         st.session_state.slide_index = 0
 
     # --- Sidebar ---
     with st.sidebar:
         st.header("Control de Diapositiva")
         
-        # 1. Slider de Navegación (Mejora visual)
         current_file = files[st.session_state.slide_index]
         st.select_slider(
             "Desliza para cambiar:",
@@ -70,11 +82,8 @@ def main():
         st.markdown("---")
         st.header("Ajustes de Visualización")
         
-        # 2. Control de Altura (Para solucionar el corte vertical)
         iframe_height = st.slider("Altura del visor (px)", 600, 2000, 1000, 100)
         
-        # 3. Control de Ancho (Hack para solucionar el corte horizontal)
-        # Esto inyecta CSS en el HTML para escalarlo si es muy ancho
         st.info("Si la diapositiva se ve cortada, reduce la escala.")
         scale_factor = st.slider("Escala (%)", 50, 150, 100, 10) / 100
 
@@ -82,7 +91,6 @@ def main():
     col1, col_mid, col2 = st.columns([1, 10, 1])
 
     with col1:
-        # on_click ejecuta la función ANTES de recargar la página
         st.button("⬅️ Anterior", on_click=ir_anterior, use_container_width=True)
 
     with col2:
@@ -98,21 +106,41 @@ def main():
         with open(file_path, 'r', encoding='utf-8') as f:
             raw_html = f.read()
             
-        # Inyectamos CSS para controlar el zoom/escala dentro del iframe
-        # Esto ayuda a que el contenido grande quepa en pantallas pequeñas
-        if scale_factor != 1.0:
-            zoom_css = f"""
-            <style>
-                body {{
-                    transform: scale({scale_factor});
-                    transform-origin: 0 0;
-                    width: {100/scale_factor}%;
-                }}
-            </style>
-            """
-            final_html = zoom_css + raw_html
-        else:
-            final_html = raw_html
+        # CSS a inyectar en el HTML para centrar y eliminar márgenes/paddings internos
+        # Esto va dentro del <head> o al inicio del <body> del HTML que estamos cargando
+        injection_css = f"""
+        <style>
+            body {{
+                margin: 0 !important;
+                padding: 0 !important;
+                text-align: center !important; /* Centra el contenido del body */
+                overflow-x: hidden; /* Evita scroll horizontal si hay contenido muy ancho */
+            }}
+            /* Si las visualizaciones tienen un ID o CLASE principal, también se pueden centrar */
+            /* Por ejemplo, si es Plotly, suelen estar en un div con class .js-plotly-plot */
+            .js-plotly-plot {{
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }}
+            
+            /* Aplicar zoom/escala si es necesario */
+            body {{
+                transform: scale({scale_factor});
+                transform-origin: 0 0;
+                width: {100/scale_factor}%; /* Ajusta el ancho para que el scroll horizontal funcione bien con scale */
+            }}
+        </style>
+        """
+        
+        # Inyectamos el CSS justo después del <head> o al inicio del <body>
+        # Buscamos la etiqueta de cierre de <head> o inicio de <body> para la inyección
+        if "<head>" in raw_html:
+            final_html = raw_html.replace("<head>", "<head>" + injection_css)
+        elif "<body>" in raw_html:
+            final_html = raw_html.replace("<body>", "<body>" + injection_css)
+        else: # Si no hay head ni body (poco común pero posible en fragmentos HTML)
+            final_html = injection_css + raw_html
+
 
         components.html(final_html, height=iframe_height, scrolling=True)
 
