@@ -85,7 +85,7 @@ def main():
         iframe_height = st.slider("Altura del visor (px)", 600, 2000, 1000, 100)
         
         st.info("Si la diapositiva se ve cortada, reduce la escala.")
-        scale_factor = st.slider("Escala (%)", 50, 150, 100, 10) / 100
+        scale_factor = st.slider("Escala (%)", 50, 150, 85, 5) / 100
 
     # --- Navegación Principal ---
     col1, col_mid, col2 = st.columns([1, 10, 1])
@@ -106,28 +106,36 @@ def main():
         with open(file_path, 'r', encoding='utf-8') as f:
             raw_html = f.read()
             
-        # CSS a inyectar en el HTML para centrar y eliminar márgenes/paddings internos
-        # Esto va dentro del <head> o al inicio del <body> del HTML que estamos cargando
+        # CSS a inyectar en el HTML para corregir el layout fijo de las diapositivas
+        # 1. Ajustamos el body para permitir scroll si es necesario, pero centrar contenido
+        # 2. Atacamos específicamente a .slide-container (que tiene width: 1280px fijo)
+        #    para escalarlo y que quepa en el iframe.
         injection_css = f"""
         <style>
             body {{
                 margin: 0 !important;
                 padding: 0 !important;
-                text-align: center !important; /* Centra el contenido del body */
-                overflow-x: hidden; /* Evita scroll horizontal si hay contenido muy ancho */
-            }}
-            /* Si las visualizaciones tienen un ID o CLASE principal, también se pueden centrar */
-            /* Por ejemplo, si es Plotly, suelen estar en un div con class .js-plotly-plot */
-            .js-plotly-plot {{
-                margin-left: auto !important;
-                margin-right: auto !important;
+                background-color: #121212 !important; /* Coincidir con el fondo de las diapos */
+                display: flex !important;
+                justify-content: center !important;
+                align-items: flex-start !important; /* Alineamos arriba para que el scale no corte la cabecera */
+                min-height: 100vh !important;
+                overflow: auto !important; /* Permitir scroll si el zoom es muy grande */
             }}
             
-            /* Aplicar zoom/escala si es necesario */
-            body {{
+            /* Corrección específica para tus diapositivas (6, 11, 12, etc.) */
+            .slide-container {{
                 transform: scale({scale_factor});
-                transform-origin: 0 0;
-                width: {100/scale_factor}%; /* Ajusta el ancho para que el scroll horizontal funcione bien con scale */
+                transform-origin: top center; /* Escalar desde arriba centro */
+                margin-top: 20px !important;
+                margin-bottom: 20px !important;
+                box-shadow: 0 0 20px rgba(0,0,0,0.5) !important; /* Resaltar el borde para ver los límites */
+            }}
+
+            /* Para diapositivas que no usen .slide-container, aplicamos un fallback genérico */
+            body > div:first-child:not(.slide-container) {{
+                transform: scale({scale_factor});
+                transform-origin: top center;
             }}
         </style>
         """
