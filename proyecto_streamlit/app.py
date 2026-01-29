@@ -82,7 +82,7 @@ def main():
         st.markdown("---")
         st.header("Ajustes de Visualización")
         
-        iframe_height = st.slider("Altura del visor (px)", 600, 2000, 1200, 100)
+
 
     # --- Navegación Principal ---
     col1, col_mid, col2 = st.columns([1, 10, 1])
@@ -106,7 +106,7 @@ def main():
         # Renderizamos el HTML con un ancho FIJO que coincida con el diseño de las diapositivas (1280px).
         # Esto evita que Streamlit intente "apretar" la diapositiva si la ventana es pequeña.
         # width=1300 da un pequeño margen de seguridad.
-        components.html(raw_html, height=iframe_height, scrolling=True)
+        components.html(raw_html, height=None, scrolling=True)
 
     except Exception as e:
         st.error(f"Error cargando archivo: {e}")
