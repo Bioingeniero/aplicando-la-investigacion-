@@ -102,11 +102,29 @@ def main():
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             raw_html = f.read()
+
+        # 1. PARCHE CSS: Sobrescribimos el estilo interno que limita la altura
+        css_patch = """
+        <style>
+            body, html {
+                height: auto !important;
+                min-height: 100vh !important;
+                overflow: visible !important;
+            }
+            .slide-container {
+                height: auto !important;
+                min-height: 100vh;
+                margin: 0 auto;
+            }
+        </style>
+        """
+        
+        # Unimos el parche con el HTML original
+        html_fixed = css_patch + raw_html
             
-        # Renderizamos el HTML con un ancho FIJO que coincida con el diseño de las diapositivas (1280px).
-        # Esto evita que Streamlit intente "apretar" la diapositiva si la ventana es pequeña.
-        # width=1300 da un pequeño margen de seguridad.
-        components.html(raw_html, height=None, scrolling=True)
+        # 2. RENDERIZADO: Usamos una altura FIJA generosa (1100px) 
+        # para asegurar que quepa cualquier formato (4:3 o 16:9)
+        components.html(html_fixed, height=1100, scrolling=True)
 
     except Exception as e:
         st.error(f"Error cargando archivo: {e}")
