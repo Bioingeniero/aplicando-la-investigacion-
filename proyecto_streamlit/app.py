@@ -83,9 +83,6 @@ def main():
         st.header("Ajustes de Visualización")
         
         iframe_height = st.slider("Altura del visor (px)", 600, 2000, 1200, 100)
-        
-        st.info("Si la diapositiva se ve cortada, reduce la escala.")
-        scale_factor = st.slider("Escala (%)", 50, 150, 85, 5) / 100
 
     # --- Navegación Principal ---
     col1, col_mid, col2 = st.columns([1, 10, 1])
@@ -106,51 +103,10 @@ def main():
         with open(file_path, 'r', encoding='utf-8') as f:
             raw_html = f.read()
             
-        # CSS a inyectar en el HTML para corregir el layout fijo de las diapositivas
-        # 1. Ajustamos el body para permitir scroll si es necesario, pero centrar contenido
-        # 2. Atacamos específicamente a .slide-container (que tiene width: 1280px fijo)
-        #    para escalarlo y que quepa en el iframe.
-        injection_css = f"""
-        <style>
-            body {{
-                margin: 0 !important;
-                padding: 0 !important;
-                background-color: #121212 !important; /* Coincidir con el fondo de las diapos */
-                display: flex !important;
-                justify-content: center !important;
-                align-items: flex-start !important; /* Alineamos arriba para que el scale no corte la cabecera */
-                min-height: 100vh !important;
-                overflow: auto !important; /* Permitir scroll si el zoom es muy grande */
-            }}
-            
-            /* Corrección específica para tus diapositivas (6, 11, 12, etc.) */
-            .slide-container {{
-                transform: scale({scale_factor});
-                transform-origin: top center; /* Escalar desde arriba centro */
-                margin-top: 20px !important;
-                margin-bottom: 20px !important;
-                box-shadow: 0 0 20px rgba(0,0,0,0.5) !important; /* Resaltar el borde para ver los límites */
-            }}
-
-            /* Para diapositivas que no usen .slide-container, aplicamos un fallback genérico */
-            body > div:first-child:not(.slide-container) {{
-                transform: scale({scale_factor});
-                transform-origin: top center;
-            }}
-        </style>
-        """
-        
-        # Inyectamos el CSS justo después del <head> o al inicio del <body>
-        # Buscamos la etiqueta de cierre de <head> o inicio de <body> para la inyección
-        if "<head>" in raw_html:
-            final_html = raw_html.replace("<head>", "<head>" + injection_css)
-        elif "<body>" in raw_html:
-            final_html = raw_html.replace("<body>", "<body>" + injection_css)
-        else: # Si no hay head ni body (poco común pero posible en fragmentos HTML)
-            final_html = injection_css + raw_html
-
-
-        components.html(final_html, height=iframe_height, scrolling=True)
+        # Renderizamos el HTML con un ancho FIJO que coincida con el diseño de las diapositivas (1280px).
+        # Esto evita que Streamlit intente "apretar" la diapositiva si la ventana es pequeña.
+        # width=1300 da un pequeño margen de seguridad.
+        components.html(raw_html, height=iframe_height, width=1300, scrolling=True)
 
     except Exception as e:
         st.error(f"Error cargando archivo: {e}")
