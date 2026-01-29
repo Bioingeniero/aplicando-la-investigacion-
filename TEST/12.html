@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 12: Variable 2 - Presión de Prensado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores del Gráfico */
+            --graph-line: #00d2ff; /* Cian brillante para la curva */
+            --graph-fill: rgba(0, 210, 255, 0.15);
+            --axis-color: #78909c;
+            --grid-color: rgba(120, 144, 156, 0.2);
+            --highlight-range: rgba(255, 193, 7, 0.2); /* Amarillo para el rango de acción */
+            --accent-action: #ffc107;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-dark);
+            /* Fondo sutil técnico */
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+        }
+        
+        .header-icon {
+            color: var(--graph-line);
+        }
+
+        /* Main Content: The Graph */
+        .graph-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .chart-svg {
+            width: 90%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* SVG Elements Styling */
+        .axis-line { stroke: var(--axis-color); stroke-width: 2; marker-end: url(#arrowhead); }
+        .grid-line { stroke: var(--grid-color); stroke-width: 1; stroke-dasharray: 5,5; }
+        .tick-line { stroke: var(--axis-color); stroke-width: 2; }
+        .axis-label { fill: var(--text-muted); font-size: 14px; font-family: 'Roboto', sans-serif; }
+        .axis-title { fill: var(--text-light); font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+
+        .data-curve {
+            fill: none;
+            stroke: var(--graph-line);
+            stroke-width: 5;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 10px var(--graph-line));
+        }
+        
+        .curve-area-fill {
+            fill: var(--graph-fill);
+            stroke: none;
+        }
+
+        .saturation-point {
+            fill: var(--bg-dark);
+            stroke: var(--graph-line);
+            stroke-width: 3;
+        }
+        
+        .saturation-label {
+            fill: var(--graph-line);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Rango de acción highlight */
+        .range-highlight-box {
+            fill: var(--highlight-range);
+            stroke: var(--accent-action);
+            stroke-width: 2;
+            stroke-dasharray: 10,5;
+        }
+
+
+        /* Footer Support Text */
+        .slide-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            max-width: 45%;
+        }
+        
+        .footer-icon-box {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .footer-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+        }
+
+        .footer-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .highlight-hyp { color: var(--graph-line); font-weight: 600; }
+        .highlight-act { color: var(--accent-action); font-weight: 600; font-family: 'Fira Code', monospace; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.91 8.84 8.56 2.23a1.93 1.93 0 0 0-1.81 0L3.1 4.13a1.93 1.93 0 0 0-.67 2.64l12.35 6.61a1.93 1.93 0 0 0 1.81 0l3.65-1.9a1.93 1.93 0 0 0 .67-2.64z"/><path d="M6.9 5.1 2 14.22a1.93 1.93 0 0 0 .66 2.64l12.36 6.6a1.93 1.93 0 0 0 1.8 0l3.66-1.9a1.93 1.93 0 0 0 .67-2.64L16.3 9.8"/></svg>
+            <h1>Variable 2: Presión de Prensado</h1>
+        </header>
+
+        <main class="graph-container">
+            <svg class="chart-svg" viewBox="0 0 800 500">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="var(--axis-color)" />
+                    </marker>
+                </defs>
+
+                <rect class="range-highlight-box" x="295" y="50" width="260" height="400" rx="5" />
+                <text x="425" y="40" text-anchor="middle" fill="var(--accent-action)" font-size="14" font-weight="bold">Rango Experimental (DOE)</text>
+
+                <line class="grid-line" x1="100" y1="350" x2="750" y2="350" />
+                <line class="grid-line" x1="100" y1="250" x2="750" y2="250" />
+                <line class="grid-line" x1="100" y1="150" x2="750" y2="150" />
+
+                <line class="grid-line" x1="230" y1="50" x2="230" y2="450" /> <line class="grid-line" x1="360" y1="50" x2="360" y2="450" /> <line class="grid-line" x1="490" y1="50" x2="490" y2="450" /> <line class="grid-line" x1="620" y1="50" x2="620" y2="450" /> <line class="axis-line" x1="100" y1="450" x2="780" y2="450" /> <line class="axis-line" x1="100" y1="450" x2="100" y2="20" />  <text class="axis-title" x="780" y="485" text-anchor="end">Presión (MPa)</text>
+                <text class="axis-title" x="40" y="250" transform="rotate(-90 40,250)" text-anchor="middle">Densidad (g/cm³)</text>
+
+                <line class="tick-line" x1="230" y1="450" x2="230" y2="460" /> <text class="axis-label" x="230" y="475" text-anchor="middle">100</text>
+                <line class="tick-line" x1="360" y1="450" x2="360" y2="460" /> <text class="axis-label" x="360" y="475" text-anchor="middle">200</text>
+                <line class="tick-line" x1="490" y1="450" x2="490" y2="460" /> <text class="axis-label" x="490" y="475" text-anchor="middle">300</text>
+                <line class="tick-line" x1="620" y1="450" x2="620" y2="460" /> <text class="axis-label" x="620" y="475" text-anchor="middle">400</text>
+                
+                <text class="axis-label" x="90" y="455" text-anchor="end">Baja</text>
+                <text class="axis-label" x="90" y="100" text-anchor="end">Alta</text>
+
+
+                <path class="curve-area-fill" d="M 100,450 C 200,400 300,150 500,120 S 750,100 750,100 L 750,450 L 100,450 Z" />
+                <path class="data-curve" d="M 100,450 C 200,400 300,150 500,120 S 750,100 750,100" />
+
+                <circle class="saturation-point" cx="650" cy="105" r="8" />
+                <text class="saturation-label" x="650" y="85" text-anchor="middle">Zona de Saturación</text>
+                
+            </svg>
+        </main>
+
+        <footer class="slide-footer">
+            <div class="footer-item">
+                <div class="footer-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--graph-line)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <div>
+                    <div class="footer-label">Hipótesis</div>
+                    <p class="footer-text">Mayor presión aplicada resulta en <span class="highlight-hyp">menor volumen de poro libre</span> (mayor compactación).</p>
+                </div>
+            </div>
+
+            <div class="footer-item">
+                <div class="footer-icon-box" style="border-color: var(--accent-action);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-action)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
+                <div>
+                    <div class="footer-label" style="color: var(--accent-action);">Acción Experimental</div>
+                    <p class="footer-text">Realizar un barrido de presiones en el rango de <span class="highlight-act">150 - 350 MPa</span>.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 16: Metodología - Diseño Factorial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a12; /* Fondo más profundo, casi negro azulado */
+            --text-light: #ffffff;
+            --text-muted: #a0a8b8;
+            
+            /* Colores Neon/Data */
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bd00ff;
+            --neon-blue: #0066ff;
+            --node-glow: rgba(0, 243, 255, 0.5);
+            
+            --cube-edge-color: rgba(255, 255, 255, 0.2);
+            --axis-label-color: #ffffff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px; /* Perspectiva para el 3D */
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo con un patrón de red geométrica abstracta */
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 102, 255, 0.1) 0%, transparent 60%),
+                linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.02) 75%, rgba(255, 255, 255, 0.02) 76%, transparent 77%),
+                linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.02) 75%, rgba(255, 255, 255, 0.02) 76%, transparent 77%);
+            background-size: 100% 100%, 50px 50px, 50px 50px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 102, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .slide-header h1 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--text-light), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.3));
+        }
+
+        /* Main Content Layout */
+        .content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* ----- 3D CUBE SECTION ----- */
+        .cube-section {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        /* El contenedor que rota */
+        .cube-wrapper {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotateCube 20s infinite linear;
+        }
+
+        @keyframes rotateCube {
+            0% { transform: rotateX(-20deg) rotateY(0deg); }
+            100% { transform: rotateX(-20deg) rotateY(360deg); }
+        }
+
+        /* Nodos (Puntos en las esquinas) */
+        .node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--node-glow), inset 0 0 5px rgba(255,255,255,0.8);
+            transform-style: preserve-3d;
+        }
+        /* Posicionamiento de los 8 nodos */
+        .n1 { transform: translateZ(150px) translateY(-150px) translateX(-150px); }
+        .n2 { transform: translateZ(150px) translateY(-150px) translateX(150px); background: var(--neon-purple); }
+        .n3 { transform: translateZ(150px) translateY(150px) translateX(-150px); background: var(--neon-blue); }
+        .n4 { transform: translateZ(150px) translateY(150px) translateX(150px); }
+        .n5 { transform: translateZ(-150px) translateY(-150px) translateX(-150px); background: var(--neon-blue); }
+        .n6 { transform: translateZ(-150px) translateY(-150px) translateX(150px); }
+        .n7 { transform: translateZ(-150px) translateY(150px) translateX(-150px); background: var(--neon-purple); }
+        .n8 { transform: translateZ(-150px) translateY(150px) translateX(150px); }
+
+        /* Aristas (Líneas conectoras) - Representadas como caras transparentes con bordes */
+        .edge-face {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 2px solid var(--cube-edge-color);
+            opacity: 0.5;
+            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.05);
+        }
+        .f-front  { transform: translateZ(150px); }
+        .f-back   { transform: translateZ(-150px); }
+        .f-right  { transform: rotateY(90deg) translateZ(150px); }
+        .f-left   { transform: rotateY(-90deg) translateZ(150px); }
+        .f-top    { transform: rotateX(90deg) translateZ(150px); }
+        .f-bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+        /* Conectores internos (Diagonales para enfatizar interacción) */
+        .internal-connector {
+            position: absolute;
+            width: 2px;
+            height: 424px; /* sqrt(300^2 + 300^2) */
+            background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-purple));
+            top: 50%; left: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+        .ic-1 { transform: translate(-50%, -50%) rotateY(45deg) rotateZ(35deg); }
+        .ic-2 { transform: translate(-50%, -50%) rotateY(-45deg) rotateZ(-35deg); }
+
+
+        /* Etiquetas de Ejes */
+        .axis-label {
+            position: absolute;
+            color: var(--axis-label-color);
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: none;
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+        .label-x { transform: translateZ(150px) translateY(170px); bottom: 0; left: 50%; } /* Química */
+        .label-y { transform: translateZ(150px) translateX(-180px) rotateZ(-90deg); left: 0; top: 50%; } /* Presión */
+        .label-z { transform: translateX(170px) translateY(-170px) rotateY(90deg); right: 0; top: 0; } /* Temperatura */
+
+
+        /* ----- TEXT SECTION ----- */
+        .text-section {
+            flex: 0 0 40%;
+            padding-left: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 40px;
+            z-index: 2;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid var(--neon-cyan);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .info-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 40px rgba(0, 243, 255, 0.1);
+        }
+
+        .card-icon {
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        
+        .highlight-concept {
+            font-weight: 700;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+        }
+        .highlight-system {
+            font-weight: 700;
+            color: var(--neon-purple);
+        }
+
+        .variables-list {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+        .var-tag {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: var(--neon-cyan);
+        }
+        .var-x { color: var(--neon-cyan); border-color: var(--neon-cyan); }
+        .var-y { color: var(--neon-purple); border-color: var(--neon-purple); background: rgba(189, 0, 255, 0.1); }
+        .var-z { color: var(--neon-blue); border-color: var(--neon-blue); background: rgba(0, 102, 255, 0.1); }
+
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Metodología: Diseño Factorial</h1>
+        </header>
+
+        <main class="content-wrapper">
+            
+            <section class="cube-section">
+                <div class="cube-wrapper">
+                    <div class="node n1"></div> <div class="node n2"></div>
+                    <div class="node n3"></div> <div class="node n4"></div>
+                    <div class="node n5"></div> <div class="node n6"></div>
+                    <div class="node n7"></div> <div class="node n8"></div>
+
+                    <div class="edge-face f-front"></div>
+                    <div class="edge-face f-back"></div>
+                    <div class="edge-face f-right"></div>
+                    <div class="edge-face f-left"></div>
+                    <div class="edge-face f-top"></div>
+                    <div class="edge-face f-bottom"></div>
+                    
+                    <div class="internal-connector ic-1"></div>
+                    <div class="internal-connector ic-2"></div>
+
+                    <div class="axis-label label-x">Química (X)</div>
+                    <div class="axis-label label-y">Presión (Y)</div>
+                    <div class="axis-label label-z">Temperatura (Z)</div>
+                </div>
+            </section>
+
+            <section class="text-section">
+                
+                <div class="info-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M18.364 5.636a9 9 0 0 1 0 12.728"></path><path d="M5.636 5.636a9 9 0 0 0 0 12.728"></path><path d="M15.536 8.464a5 5 0 0 1 0 7.072"></path><path d="M8.464 8.464a5 5 0 0 0 0 7.072"></path></svg>
+                    </div>
+                    <p class="card-text">
+                        Foco principal en la <span class="highlight-concept">Evaluación de Interacciones</span>. Cómo el efecto de una variable depende del nivel de otra.
+                    </p>
+                </div>
+
+                <div class="info-card" style="border-color: var(--neon-purple);">
+                    <div class="card-icon" style="color: var(--neon-purple);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <p class="card-text">
+                        Superamos el enfoque "una variable a la vez" (OFAT). No analizamos variables aisladas; analizamos el <span class="highlight-system">sistema completo</span>.
+                    </p>
+                </div>
+
+                <div class="info-card" style="border-color: var(--neon-blue);">
+                    <div class="card-icon" style="color: var(--neon-blue);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </div>
+                    <p class="card-text">
+                        Exploración simultánea del espacio de diseño:
+                    </p>
+                    <div class="variables-list">
+                        <span class="var-tag var-x">Química</span>
+                        <span>x</span>
+                        <span class="var-tag var-y">Presión</span>
+                        <span>x</span>
+                        <span class="var-tag var-z">Temperatura</span>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 2: Composición del Material</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #1e2228; /* Fondo oscuro técnico */
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8c4;
+            
+            /* Colores de Materiales */
+            --carbon-dark: #2a2a2a;
+            --carbon-light: #454545;
+            
+            --metal-copper-1: #c87d4b;
+            --metal-copper-2: #e09f7d;
+            --metal-silver-1: #a8a9ad;
+            --metal-silver-2: #dce0e6;
+
+            --binder-base: #8a3d3d;
+            --binder-highlight: #c25454;
+            --critical-alert: #ff3b30;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal de la diapositiva (Aspect Ratio 16:9 fijo) */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-main);
+            background-image: radial-gradient(circle at top right, #2a3038 0%, var(--bg-main) 60%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 3px solid var(--metal-silver-1);
+            padding-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content Layout */
+        .content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        /* Schematic Chart Area */
+        .composition-schematic {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            height: 350px;
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        /* Estilos generales para los bloques de material */
+        .material-block {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid transparent;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .material-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .block-visual {
+            height: 65%;
+            width: 100%;
+            position: relative;
+            /* Patrón de cuadrícula sutil para efecto técnico */
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .block-info {
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .block-info h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .block-info p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* --- FASE 1: CARBONOSA --- */
+        .block-carbon {
+            border-color: var(--carbon-light);
+        }
+        .block-carbon .block-visual {
+            background: linear-gradient(135deg, var(--carbon-dark), var(--carbon-light));
+            /* Textura de grafito */
+            background-image: repeating-radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 2px, transparent 4px),
+                              linear-gradient(135deg, var(--carbon-dark), #3a3a3a);
+        }
+        .block-carbon h3 { color: #a0a0a0; }
+
+
+        /* --- FASE 2: METÁLICA --- */
+        .block-metal {
+            flex: 1.5; /* 50% más ancho para representar la proporción */
+            border-color: var(--metal-silver-1);
+        }
+        .block-metal .block-visual {
+            /* Gradiente complejo para simular mezcla de cobre y plata */
+            background: linear-gradient(110deg, 
+                var(--metal-copper-1), 
+                var(--metal-silver-2) 30%, 
+                var(--metal-copper-2) 50%, 
+                var(--metal-silver-1) 80%);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Brillo metálico */
+        .block-metal .block-visual::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg);
+            animation: shine 5s infinite linear;
+        }
+        .block-metal h3 { color: var(--metal-silver-2); }
+        .percentage-badge {
+            background: var(--metal-silver-1);
+            color: var(--bg-main);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            font-weight: 800;
+        }
+
+
+        /* --- FASE 3: AGLOMERANTE (CRÍTICO) --- */
+        .block-binder {
+            border-color: var(--binder-highlight);
+            box-shadow: 0 0 20px rgba(194, 84, 84, 0.2);
+        }
+        .block-binder .block-visual {
+            background: linear-gradient(135deg, var(--binder-base), var(--binder-highlight));
+            /* Textura orgánica/resina */
+            background-image: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 70%),
+                              linear-gradient(135deg, var(--binder-base), var(--binder-highlight));
+        }
+        .block-binder h3 { color: var(--binder-highlight); }
+        
+        .critical-alert-tag {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background-color: rgba(255, 59, 48, 0.15);
+            border: 1px solid var(--critical-alert);
+            color: var(--critical-alert);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulseAlert 2s infinite;
+        }
+
+        /* Supporting Text Area */
+        .supporting-text-area {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .supporting-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            max-width: 60%;
+            border-left: 4px solid var(--metal-silver-1);
+            padding-left: 20px;
+        }
+
+        .focus-box {
+            background: linear-gradient(135deg, rgba(194, 84, 84, 0.2), rgba(138, 61, 61, 0.1));
+            border-left: 4px solid var(--critical-alert);
+            padding: 15px 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .focus-box p {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        .focus-highlight {
+            color: var(--critical-alert);
+            text-transform: uppercase;
+        }
+
+        /* Animations */
+        @keyframes shine {
+            0% { left: -100%; }
+            20%, 100% { left: 200%; }
+        }
+        
+        @keyframes pulseAlert {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <h1 class="slide-title">Marco Teórico: Composición del Material</h1>
+
+        <div class="content-wrapper">
+            <section class="composition-schematic">
+                
+                <div class="material-block block-carbon">
+                    <div class="block-visual"></div>
+                    <div class="block-info">
+                        <h3>FASE CARBONOSA</h3>
+                        <p>Grafito Natural<br>Carbón Amorfo</p>
+                    </div>
+                </div>
+
+                <div class="material-block block-metal">
+                    <div class="block-visual"></div>
+                    <div class="block-info">
+                        <h3>FASE METÁLICA <span class="percentage-badge">~50%</span></h3>
+                        <p>Cobre / Plata<br>(Matriz conductora)</p>
+                    </div>
+                </div>
+
+                <div class="material-block block-binder">
+                    <div class="block-visual"></div>
+                    <div class="block-info">
+                        <h3>AGLOMERANTE (BINDER)</h3>
+                        <p>Resina Fenólica / Brea</p>
+                        <div class="critical-alert-tag">Componente Crítico</div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="supporting-text-area">
+                <div class="supporting-quote">
+                    "La interacción compleja entre estas tres fases define la estabilidad dimensional final de la pieza."
+                </div>
+                <div class="focus-box">
+                    <p>Foco de Atención: <span class="focus-highlight">El Aglomerante (Binder).</span></p>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 4: Etapas Críticas (Resumen)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            --critical-red: #ff3b30;
+            --stage-blue: #3498db;
+            --stage-purple: #9b59b6;
+            --stage-orange: #e67e22;
+            --stage-green: #2ecc71;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at top right, rgba(255, 59, 48, 0.1) 0%, transparent 60%),
+                linear-gradient(to bottom, #23282e, var(--bg-dark));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        .slide-header {
+            margin-bottom: 40px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 59, 48, 0.2);
+            color: var(--critical-red);
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 10px;
+            border: 1px solid var(--critical-red);
+            text-transform: uppercase;
+        }
+
+        .grid-container {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 25px;
+            padding: 10px 0;
+        }
+
+        .stage-card {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 6px solid #555;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .stage-card:hover { transform: translateX(5px); }
+
+        .stage-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .variable-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .variable-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* Specific Colors */
+        .stage-1 { border-color: var(--stage-blue); }
+        .stage-1 .stage-title { color: var(--stage-blue); }
+        
+        .stage-3 { border-color: var(--stage-orange); }
+        .stage-3 .stage-title { color: var(--stage-orange); }
+
+        .stage-4 { border-color: var(--stage-purple); }
+        .stage-4 .stage-title { color: var(--stage-purple); }
+
+        .stage-6 { border-color: var(--stage-green); }
+        .stage-6 .stage-title { color: var(--stage-green); }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Etapas Críticas del Proceso</h1>
+            <div class="header-badge">Determinantes de Calidad</div>
+        </header>
+
+        <main class="grid-container">
+            
+            <div class="stage-card stage-1">
+                <div class="stage-title">
+                    <span>01</span> Etapa 1: Materias Primas
+                </div>
+                <div class="variable-label">Variable Crítica</div>
+                <div class="variable-value">Tipo de Aglomerante (Binder)</div>
+            </div>
+
+            <div class="stage-card stage-3">
+                <div class="stage-title">
+                    <span>03</span> Etapa 3: Conformado
+                </div>
+                <div class="variable-label">Variable Crítica</div>
+                <div class="variable-value">Presión de Prensado</div>
+            </div>
+
+            <div class="stage-card stage-4">
+                <div class="stage-title">
+                    <span>04</span> Etapa 4: Carbonización
+                </div>
+                <div class="variable-label">Variable Crítica</div>
+                <div class="variable-value">Temperatura de Horno</div>
+            </div>
+
+            <div class="stage-card stage-6">
+                <div class="stage-title">
+                    <span>06</span> Etapa 6: Tratamientos Secundarios
+                </div>
+                <div class="variable-label">Variable Crítica</div>
+                <div class="variable-value">Recubrimiento / Impregnación</div>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>

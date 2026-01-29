@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 1: Definición del Problema MG1157</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1a1d; /* Fondo oscuro principal */
+            --text-light: #e0e0e0; /* Texto claro principal */
+            --accent-red: #ff3b30; /* Color de acento para fallas */
+            --metal-silver: #c0c0c0; /* Color para elementos metálicos */
+            --carbon-grey: #4a4a4a; /* Color para elementos de carbón */
+            --highlight-gold: #ffd700; /* Color para destacar títulos */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 90%;
+            height: 90%;
+            max-width: 1200px;
+            max-height: 675px; /* Aspect ratio aproximado de 16:9 */
+            background: linear-gradient(135deg, #232526, #414345);
+            border: 2px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+        }
+
+        /* Header Styles */
+        .main-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--highlight-gold);
+            padding-bottom: 15px;
+        }
+
+        .main-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            color: var(--highlight-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            margin: 0;
+        }
+
+        /* Content Grid Styles */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            flex-grow: 1;
+        }
+
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .grid-item h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2em;
+            color: var(--metal-silver);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--carbon-grey);
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        .support-text {
+            font-size: 0.95em;
+            color: #ccc;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+        }
+
+        /* Elemento 1: Imagen del Producto */
+        .product-image-container {
+            width: 150px;
+            height: 200px;
+            background: linear-gradient(to bottom, var(--metal-silver) 50%, var(--carbon-grey) 50%);
+            border-radius: 5px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 5px 10px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .product-image-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px);
+        }
+
+        /* Elemento 2: El Fenómeno */
+        .phenomenon-box {
+            background-color: rgba(255, 59, 48, 0.1);
+            border: 2px solid var(--accent-red);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px var(--accent-red);
+        }
+        .phenomenon-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8em;
+            color: var(--accent-red);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Elemento 3: Consecuencia (Diagrama) */
+        .consequence-diagram {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .holder {
+            width: 120px;
+            height: 180px;
+            border: 4px solid #666;
+            border-radius: 5px;
+            position: relative;
+            background-color: #2a2a2a;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .brush-cracked {
+            width: 112px; /* Más ancho que el holder para mostrar atasco */
+            height: 160px;
+            background: linear-gradient(to bottom, var(--metal-silver) 50%, var(--carbon-grey) 50%);
+            position: absolute;
+            top: 10px;
+            left: 0px; /* Desplazado para simular presión */
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--accent-red);
+            border: 2px solid var(--accent-red);
+        }
+        .crack {
+            position: absolute;
+            background-color: var(--accent-red);
+            box-shadow: 0 0 5px var(--accent-red);
+        }
+        .crack-1 { width: 80%; height: 3px; top: 40%; left: 10%; transform: rotate(-15deg); }
+        .crack-2 { width: 60%; height: 2px; top: 65%; left: 20%; transform: rotate(10deg); }
+        .crack-3 { width: 3px; height: 50%; top: 25%; left: 50%; }
+        .blocked-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5em;
+            color: var(--accent-red);
+            font-weight: bold;
+            text-shadow: 1px 1px 3px black;
+            border: 3px solid var(--accent-red);
+            padding: 5px 15px;
+            border-radius: 5px;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="main-header">
+            <h1>DEFINICIÓN DEL PROBLEMA: FALLA EN ESCOBILLAS MG1157</h1>
+        </header>
+
+        <main class="content-grid">
+            <div class="grid-item">
+                <h2>Producto: Escobilla de Carbón</h2>
+                <div class="product-image-container">
+                    </div>
+                <p class="support-text">
+                    <strong>Material:</strong> Metal-Grafito (50%) - Grado MG1157.
+                </p>
+            </div>
+
+            <div class="grid-item" style="border-color: var(--accent-red);">
+                <h2 style="color: var(--accent-red); border-bottom-color: var(--accent-red);">El Fenómeno Crítico</h2>
+                <div class="phenomenon-box">
+                    <p class="phenomenon-title">INTERNAL SWELLING</p>
+                    <p style="color: var(--text-light); margin-top: 10px;">(Hinchamiento Interno)</p>
+                </div>
+                <p class="support-text">
+                    <strong>Falla:</strong> Aumento de porosidad y grietas internas.
+                </p>
+            </div>
+
+            <div class="grid-item">
+                <h2>Consecuencia de la Falla</h2>
+                <div class="consequence-diagram">
+                    <div class="holder">
+                        <div class="brush-cracked">
+                            <div class="crack crack-1"></div>
+                            <div class="crack crack-2"></div>
+                            <div class="crack crack-3"></div>
+                        </div>
+                    </div>
+                    <div class="blocked-indicator">BLOQUEADO</div>
+                </div>
+                <p class="support-text">
+                    <strong>Causa Inmediata:</strong> Desequilibrio Termo-Electro-Mecánico + Tolerancia Reducida.
+                </p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 13: Variable 3 - Temperatura de Carbonización</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Palette Térmica */
+            --temp-extreme: #ff3300; /* Rojo intenso al tope */
+            --temp-high: #ff6600;    /* Naranja fuerte */
+            --temp-mid: #ff9900;     /* Naranja medio */
+            --temp-base: #ffcc00;    /* Amarillo naranja en la base */
+            
+            --range-current-bg: rgba(231, 76, 60, 0.3);
+            --range-current-border: #e74c3c;
+            
+            --range-proposed-bg: rgba(241, 196, 15, 0.5);
+            --range-proposed-border: #f1c40f; /* Dorado brillante para el objetivo optimizado */
+            
+            --glass-border: rgba(255,255,255,0.3);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-dark);
+            /* Fondo con gradiente térmico radial ascendente */
+            background-image: 
+                radial-gradient(circle at 50% 100%, rgba(255, 102, 0, 0.2) 0%, transparent 60%),
+                linear-gradient(to bottom, #23282e, var(--bg-dark));
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+        }
+        
+        .header-icon {
+            color: var(--temp-high);
+            filter: drop-shadow(0 0 5px var(--temp-high));
+        }
+
+        /* Main Content: Thermometer Visualization */
+        .thermometer-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .thermo-svg {
+            width: auto;
+            height: 100%;
+            max-height: 450px;
+            overflow: visible;
+        }
+
+        /* SVG Styles */
+        .glass-tube {
+            fill: rgba(255,255,255,0.05);
+            stroke-width: 4;
+        }
+        
+        .liquid-column {
+            /* Gradiente definido en <defs> */
+            fill: url(#liquidGrad);
+            filter: drop-shadow(0 0 10px var(--temp-high));
+        }
+
+        .tick-mark { stroke: var(--text-muted); stroke-width: 2; }
+        .tick-label { fill: var(--text-muted); font-family: 'Roboto', sans-serif; font-size: 16px; font-weight: 500; }
+        .tick-label-hot { fill: var(--text-light); font-weight: 700; }
+
+        /* Range Indicators */
+        .range-box {
+            rx: 8; ry: 8;
+            stroke-width: 3;
+            stroke-dasharray: 8 4;
+        }
+        .range-current {
+            fill: var(--range-current-bg);
+        }
+        .range-proposed {
+            fill: var(--range-proposed-bg);
+            stroke-width: 4;
+            stroke-dasharray: none; /* Sólido para destacar */
+            animation: pulseRange 3s infinite ease-in-out;
+        }
+        
+        @keyframes pulseRange {
+            0%, 100% { opacity: 0.8; stroke-width: 4; }
+            50% { opacity: 1; stroke-width: 6; filter: drop-shadow(0 0 10px var(--range-proposed-border)); }
+        }
+
+        .range-label-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        .label-current { fill: var(--range-current-border); }
+        .label-proposed { fill: var(--range-proposed-border); font-size: 16px; }
+
+        /* Footer Support Text */
+        .slide-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            max-width: 45%;
+        }
+        
+        .footer-icon-box {
+            background: rgba(255, 102, 0, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .footer-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: var(--temp-mid);
+        }
+
+        .footer-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .highlight-hot { color: var(--temp-high); font-weight: 600; }
+        .highlight-action { color: var(--range-proposed-border); font-weight: 600; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/><path d="M12 12v.01"/><path d="m16 15-2 3"/><path d="m6 15 2 3"/></svg>
+            <h1>Variable 3: Temperatura de Carbonización</h1>
+        </header>
+
+        <main class="thermometer-container">
+            <svg class="thermo-svg" viewBox="0 0 600 500">
+                <defs>
+                    <linearGradient id="liquidGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--temp-base);stop-opacity:1" />
+                        <stop offset="40%" style="stop-color:var(--temp-mid);stop-opacity:1" />
+                        <stop offset="70%" style="stop-color:var(--temp-high);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:var(--temp-extreme);stop-opacity:1" />
+                    </linearGradient>
+                    <marker id="arrowhead-curr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto" fill="var(--range-current-border)"><polygon points="0 0, 10 3.5, 0 7"/></marker>
+                    <marker id="arrowhead-prop" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto" fill="var(--range-proposed-border)"><polygon points="10 0, 0 3.5, 10 7"/></marker>
+                </defs>
+
+                <circle class="glass-tube" cx="300" cy="450" r="40" />
+                <circle class="liquid-column" cx="300" cy="450" r="32" />
+                <rect class="glass-tube" x="275" y="50" width="50" height="400" rx="25" ry="25" />
+                <rect class="liquid-column" x="283" y="60" width="34" height="395" rx="17" ry="17" />
+
+                <g transform="translate(300, 0)">
+                    <line class="tick-mark" x1="-40" y1="60" x2="-25" y2="60" />
+                    <text class="tick-label tick-label-hot" x="-50" y="65" text-anchor="end">1200°C</text>
+                    
+                    <line class="tick-mark" x1="-40" y1="140" x2="-25" y2="140" />
+                    <text class="tick-label tick-label-hot" x="-50" y="145" text-anchor="end">1000°C</text>
+                    
+                    <line class="tick-mark" x1="-40" y1="220" x2="-25" y2="220" />
+                    <text class="tick-label" x="-50" y="225" text-anchor="end">800°C</text>
+                    
+                    <line class="tick-mark" x1="-40" y1="300" x2="-25" y2="300" />
+                    <text class="tick-label" x="-50" y="305" text-anchor="end">600°C</text>
+
+                    <line class="tick-mark" x1="-40" y1="380" x2="-25" y2="380" />
+                    <text class="tick-label" x="-50" y="385" text-anchor="end">400°C</text>
+                </g>
+
+                <rect class="range-box range-current" x="340" y="100" width="120" height="160" />
+                <line x1="460" y1="180" x2="500" y2="180" stroke="var(--range-current-border)" stroke-width="2" marker-start="url(#arrowhead-curr)"/>
+                <text class="range-label-text label-current" x="510" y="185">Rango Actual<tspan x="510" dy="20" font-size="12" font-weight="400">(Disperso)</tspan></text>
+
+
+                <rect class="range-box range-proposed" x="335" y="160" width="130" height="40" />
+                <line x1="180" y1="180" x2="335" y2="180" stroke="var(--range-proposed-border)" stroke-width="3" marker-end="url(#arrowhead-prop)"/>
+                <text class="range-label-text label-proposed" x="170" y="185" text-anchor="end">Rango Propuesto<tspan x="170" dy="20" font-size="12" font-weight="400" fill="var(--text-muted)">(Ajuste Fino / Optimizado)</tspan></text>
+
+                <g fill="var(--range-proposed-border)">
+                    <polygon points="400,150 390,130 410,130" /> <polygon points="400,210 390,230 410,230" /> </g>
+
+            </svg>
+        </main>
+
+        <footer class="slide-footer">
+            <div class="footer-item">
+                <div class="footer-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--temp-high)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <div>
+                    <div class="footer-label">Hipótesis Térmica</div>
+                    <p class="footer-text">La temperatura pico y la rampa definen la <span class="highlight-hot">estructura final del coque</span> (binder carbonizado).</p>
+                </div>
+            </div>
+
+            <div class="footer-item">
+                <div class="footer-icon-box" style="border-color: var(--range-proposed-border); background: rgba(241, 196, 15, 0.1);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--range-proposed-border)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.18-.08a2 2 0 0 0-2 0l-.45.45a2 2 0 0 0 0 2l.08.18a2 2 0 0 1 0 2l-.25.43a2 2 0 0 1-1.73 1H2a2 2 0 0 0-2 2v.44a2 2 0 0 0 2 2h.18a2 2 0 0 1 1.73 1l.25.43a2 2 0 0 1 0 2l-.08.18a2 2 0 0 0 0 2l.45.45a2 2 0 0 0 2 0l.18-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V22a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.18.08a2 2 0 0 0 2 0l.45-.45a2 2 0 0 0 0-2l-.08-.18a2 2 0 0 1 0-2l.25-.43a2 2 0 0 1 1.73-1H22a2 2 0 0 0 2-2v-.44a2 2 0 0 0-2-2h-.18a2 2 0 0 1-1.73-1l-.25-.43a2 2 0 0 1 0-2l.08-.18a2 2 0 0 0 0-2l-.45-.45a2 2 0 0 0-2 0l-.18.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <div>
+                    <div class="footer-label" style="color: var(--range-proposed-border);">Acción Experimental</div>
+                    <p class="footer-text">Optimizar la rampa y acotar el rango para <span class="highlight-action">cerrar la microporosidad</span> residual.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

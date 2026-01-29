@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diapositiva 10: Flujo de Trabajo Experimental</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e2228;
+            --bg-panel: #2a3038;
+            --text-light: #ffffff;
+            --text-muted: #b0b8c4;
+            
+            /* Colores del Ciclo PDCA */
+            --color-plan: #00d2ff;   /* Cian */
+            --color-do: #9b59b6;     /* Púrpura */
+            --color-check: #ffc107;  /* Amarillo/Ámbar */
+            --color-act: #2ecc71;    /* Verde */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal 16:9 */
+        .slide-container {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            /* Fondo sutil con patrón radial que enfatiza el centro */
+            background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, var(--bg-dark) 70%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .slide-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: 1.5px;
+        }
+
+        /* Main Cycle Area */
+        .cycle-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .cycle-container {
+            position: relative;
+            width: 550px;
+            height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Animated rotating arrows ring background */
+        .cycle-flow-ring {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            animation: rotateFlow 20s linear infinite;
+            z-index: 0;
+        }
+        @keyframes rotateFlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Central Hub - The Goal */
+        .center-hub {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: var(--bg-panel);
+            border-radius: 50%;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            border: 3px solid rgba(255,255,255,0.1);
+        }
+        .hub-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .hub-goal {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+        .goal-highlight {
+            color: var(--color-act); /* Verde para indicar el objetivo positivo */
+            font-weight: 600;
+            display: block;
+            margin-top: 4px;
+        }
+        .goal-minimize {
+             color: var(--color-check);
+             font-weight: 600;
+        }
+
+
+        /* Individual Segments (Plan, Do, Check, Act) */
+        .segment {
+            position: absolute;
+            width: 160px;
+            background: var(--bg-panel);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-top: 4px solid var(--seg-color);
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+        .segment:hover { transform: scale(1.05); z-index: 3; }
+
+        /* Positioning the segments around the circle */
+        .seg-plan { top: 20px; left: 40px; --seg-color: var(--color-plan); }
+        .seg-do { top: 20px; right: 40px; --seg-color: var(--color-do); }
+        .seg-check { bottom: 40px; right: 40px; --seg-color: var(--color-check); }
+        .seg-act { bottom: 40px; left: 40px; --seg-color: var(--color-act); }
+
+        .seg-icon {
+            color: var(--seg-color);
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px var(--seg-color));
+        }
+        
+        .seg-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--seg-color);
+            margin: 0 0 5px 0;
+        }
+        
+        .seg-action {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+
+        /* Footer Support Text */
+        .footer-support {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            z-index: 2;
+        }
+
+        .support-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+        .support-icon { opacity: 0.7; }
+
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <header class="slide-header">
+            <h1>Flujo de Trabajo Experimental</h1>
+        </header>
+
+        <main class="cycle-wrapper">
+            <div class="cycle-container">
+                
+                <svg class="cycle-flow-ring" viewBox="0 0 550 550" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:var(--color-plan); stop-opacity:0.2" />
+                            <stop offset="25%" style="stop-color:var(--color-do); stop-opacity:0.2" />
+                            <stop offset="50%" style="stop-color:var(--color-check); stop-opacity:0.2" />
+                            <stop offset="75%" style="stop-color:var(--color-act); stop-opacity:0.2" />
+                            <stop offset="100%" style="stop-color:var(--color-plan); stop-opacity:0.2" />
+                        </linearGradient>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(255,255,255,0.3)" />
+                        </marker>
+                    </defs>
+                    <path d="M 275, 25 a 250,250 0 1,1 0,500 a 250,250 0 1,1 0,-500" 
+                          fill="none" stroke="url(#flowGrad)" stroke-width="40" stroke-linecap="round" 
+                          stroke-dasharray="100 450" marker-end="url(#arrowhead)"/>
+                </svg>
+
+                <div class="center-hub">
+                    <div class="hub-title">Objetivo Central</div>
+                    <div class="hub-goal">
+                        Maximizar <span class="goal-highlight">Bulk Density</span>
+                        <br>
+                        Minimizar <span class="goal-minimize">Swelling</span>
+                    </div>
+                </div>
+
+                <div class="segment seg-plan">
+                    <svg class="seg-icon" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                    <h3 class="seg-title">PLAN</h3>
+                    <div class="seg-action">Seleccionar Variables (DOE)</div>
+                </div>
+
+                <div class="segment seg-do">
+                    <svg class="seg-icon" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    <h3 class="seg-title">DO</h3>
+                    <div class="seg-action">Fabricar Prototipos</div>
+                </div>
+
+                <div class="segment seg-check">
+                    <svg class="seg-icon" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <h3 class="seg-title">CHECK</h3>
+                    <div class="seg-action">Medir Densidad y Hinchamiento</div>
+                </div>
+
+                <div class="segment seg-act">
+                    <svg class="seg-icon" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    <h3 class="seg-title">ACT</h3>
+                    <div class="seg-action">Optimizar Proceso</div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer-support">
+            <div class="support-item">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                "Enfoque iterativo de mejora continua."
+            </div>
+            <div class="support-item">
+                <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                "Toma de decisiones basada en datos."
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
