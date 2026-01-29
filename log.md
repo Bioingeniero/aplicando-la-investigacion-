@@ -143,3 +143,7 @@ This document records the key steps, decisions, and iterations in the developmen
 ## 2026-01-29 - Project Directory Reorganization
 *   **Action:** Restructured the project directory to improve organization and navigability.
 *   **Outcome:** Created `communications/`, `pipelines/`, `critiques/`, and `technical_context/` folders. Moved relevant loose Markdown files into these specific categories to declutter the root directory.
+
+## 2026-01-29 - Streamlit Application Development & GitHub Deployment
+*   **Action:** Developed a Streamlit application to serve as an interactive viewer for the presentation slides (`htmls/`).
+*   **Outcome:** Created `proyecto_streamlit/` containing `app.py` and the slides. Implemented advanced CSS patches to ensure responsiveness and fix clipping issues for both 4:3 and 16:9 slide formats. Deployed the full "end-to-end" repository to GitHub.
